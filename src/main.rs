@@ -1,7 +1,9 @@
+mod inputs;
 mod physics;
 mod player;
 mod setup;
 
+use inputs::IronWildsInputsPlugin;
 use physics::IronWildsPhysicsPlugin;
 use player::IronWildsPlayerPlugin;
 use setup::IronWildsSetupPlugin;
@@ -13,5 +15,6 @@ fn main() {
         .add_plugins(IronWildsSetupPlugin)
         .add_plugins(IronWildsPhysicsPlugin)
         .add_plugins(IronWildsPlayerPlugin)
+        .add_plugins(IronWildsInputsPlugin)
         .run();
 }
