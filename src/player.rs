@@ -41,12 +41,11 @@ fn update_player_shape(
     physics_timer: Res<PhysicsTimer>,
 ) {
     let perc_left = physics_timer.timer.percent();
-    for (player_physics, mut transform) in player_query.iter_mut() {
-        let translation = player_physics.position + (player_physics.velocity * perc_left);
-
+    for (object, mut transform) in player_query.iter_mut() {
+        let lerp = object.position + (object.velocity * perc_left);
         transform.translation = Vec3 {
-            x: translation.x,
-            y: translation.y,
+            x: lerp.x,
+            y: lerp.y,
             z: 0.0,
         }
     }
