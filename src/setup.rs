@@ -1,4 +1,5 @@
 use bevy::{log::LogPlugin, prelude::*};
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_prototype_lyon::prelude::ShapePlugin;
 
 pub struct IronWildsSetupPlugin;
@@ -10,6 +11,7 @@ impl Plugin for IronWildsSetupPlugin {
                 level: bevy::log::Level::DEBUG,
             }))
             .add_plugins(ShapePlugin)
+            .add_plugins(WorldInspectorPlugin::new())
             .add_systems(Startup, say_hello)
             .add_systems(Startup, spawn_camera);
     }
