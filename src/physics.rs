@@ -13,13 +13,13 @@ impl Plugin for IronWildsPhysicsPlugin {
 
 #[derive(Resource)]
 pub struct PhysicsTimer {
-    pub timer: Timer,
+    pub main_tick: Timer,
 }
 
 impl Default for PhysicsTimer {
     fn default() -> Self {
         Self {
-            timer: Timer::from_seconds(PHYSICS_TICK_RATE_SECONDS, TimerMode::Repeating),
+            main_tick: Timer::from_seconds(PHYSICS_TICK_RATE_SECONDS, TimerMode::Repeating),
         }
     }
 }
@@ -42,11 +42,11 @@ impl Default for Physics {
 }
 
 fn tick_physics_timer(mut physics_timer: ResMut<PhysicsTimer>, time: Res<Time>) {
-    physics_timer.timer.tick(time.delta());
+    physics_timer.main_tick.tick(time.delta());
 }
 
-fn compute_physics(mut physics_query: Query<&mut Physics>, physics_timer: Res<PhysicsTimer>) {
-    if physics_timer.timer.finished() {
+pub fn compute_physics(mut physics_query: Query<&mut Physics>, physics_timer: Res<PhysicsTimer>) {
+    if physics_timer.main_tick.finished() {
         for mut obj in physics_query.iter_mut() {
             obj.velocity = obj.velocity.mul(obj.friction);
             obj.position = obj.position.add(obj.velocity);
