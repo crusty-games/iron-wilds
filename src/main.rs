@@ -2,10 +2,11 @@ mod physics;
 mod player;
 mod setup;
 
-use bevy::prelude::*;
 use physics::IronWildsPhysicsPlugin;
 use player::IronWildsPlayerPlugin;
 use setup::IronWildsSetupPlugin;
+
+use bevy::prelude::*;
 
 fn main() {
     App::new()
