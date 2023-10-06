@@ -13,7 +13,7 @@ impl Plugin for IronWildsInputsPlugin {
 }
 
 fn move_player(
-    mut player_query: Query<(&Player, &mut Physics), With<Player>>,
+    mut player_query: Query<(&Player, &mut Physics)>,
     keyboard_input: Res<Input<KeyCode>>,
     physics_timer: Res<PhysicsTimer>,
 ) {
