@@ -13,7 +13,6 @@ impl Plugin for IronWildsPlayerPlugin {
 
 #[derive(Component)]
 pub struct Player {
-    pub aim_direction: f32,
     pub movement_speed: f32,
 }
 
@@ -30,7 +29,6 @@ fn spawn_player(mut commands: Commands) {
         },
         Fill::color(Color::WHITE),
         Player {
-            aim_direction: 0.0,
             movement_speed: 3.0,
         },
         Physics {
