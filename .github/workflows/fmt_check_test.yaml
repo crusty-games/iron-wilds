@@ -5,11 +5,11 @@ on:
       - main
 
 
-name: cargo test
+name: fmt, check, test
 
 jobs:
-  test:
-    name: Test
+  all:
+    name: Check
     runs-on: ubuntu-latest
     steps:
       - name: Install Dependencies
@@ -22,6 +22,15 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+        
+      - run: rustup component add rustfmt
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
       - uses: actions-rs/cargo@v1
         with:
           command: test
