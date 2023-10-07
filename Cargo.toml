@@ -9,3 +9,7 @@ edition = "2021"
 bevy = "0.11.3"
 bevy_prototype_lyon = "0.9.0"
 rand = "0.8.5"
+
+[target.'cfg(unix)'.dependencies]
+bevy = { version="0.11.3", features=["wayland"]}
+
