@@ -7,6 +7,7 @@ pub enum GameItemComponent {
     Placable,
     GroundLoot,
     Stackable { max_stack: usize },
+    Equipable,
 }
 
 #[allow(dead_code)]
@@ -14,6 +15,16 @@ pub struct GameItem {
     pub id: String,
     pub name: String,
     pub components: Vec<GameItemComponent>,
+}
+
+impl Default for GameItem {
+    fn default() -> Self {
+        Self {
+            id: Default::default(),
+            name: Default::default(),
+            components: Default::default(),
+        }
+    }
 }
 
 #[macro_export]
