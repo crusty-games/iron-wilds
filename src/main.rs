@@ -1,15 +1,20 @@
-use bevy::{log::LogPlugin, prelude::*};
+mod inputs;
+mod physics;
+mod player;
+mod setup;
+
+use inputs::IronWildsInputsPlugin;
+use physics::IronWildsPhysicsPlugin;
+use player::IronWildsPlayerPlugin;
+use setup::IronWildsSetupPlugin;
+
+use bevy::prelude::*;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins.set(LogPlugin {
-            filter: "info,wgpu_core=off,wgpu_hal=off".into(),
-            level: bevy::log::Level::DEBUG,
-        }))
-        .add_systems(Startup, hello_world)
+        .add_plugins(IronWildsSetupPlugin)
+        .add_plugins(IronWildsPhysicsPlugin)
+        .add_plugins(IronWildsPlayerPlugin)
+        .add_plugins(IronWildsInputsPlugin)
         .run();
-}
-
-fn hello_world() {
-    println!("Welcome to Iron Wilds!");
 }
