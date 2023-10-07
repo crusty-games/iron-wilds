@@ -1,21 +1,19 @@
 pub mod components;
+pub mod game_items;
 pub mod plugin;
 
 #[allow(dead_code)]
-pub enum ItemKind {}
-
-#[allow(dead_code)]
-pub enum ItemComponents {
-    None,
+pub enum GameItemComponent {
+    Placable,
     GroundLoot,
-    OneWithData { prop: u32 },
+    Stackable { max_stack: usize },
 }
 
 #[allow(dead_code)]
-pub struct ItemProfile {
+pub struct GameItem {
     pub id: String,
     pub name: String,
-    pub components: Vec<ItemComponents>,
+    pub components: Vec<GameItemComponent>,
 }
 
 #[macro_export]
@@ -33,41 +31,27 @@ macro_rules! item_has_component {
     };
 }
 
-#[cfg(test)]
-mod tests {
-    use super::{ItemComponents, ItemProfile};
-
-    #[test]
-    fn test_macro() {
-        let test_prop = 36;
-        let item: ItemProfile = ItemProfile {
-            id: "test".into(),
-            name: "Test".into(),
-            components: vec![
-                ItemComponents::OneWithData { prop: test_prop },
-                ItemComponents::None,
-            ],
-        };
-
-        item_has_component!(item, ItemComponents::GroundLoot, { unreachable!() });
-        item_has_component!(
-            item,
-            ItemComponents::OneWithData { prop },
-            {
-                assert_eq!(prop, &test_prop);
-            },
-            { unreachable!() }
-        );
-    }
-}
-
-#[allow(dead_code)]
-pub fn load_world_items() {
-    let mut items: Vec<ItemProfile> = vec![];
-
-    items.push(ItemProfile {
+#[test]
+fn test_macro() {
+    let test_value = 36;
+    let item: GameItem = GameItem {
         id: "test".into(),
         name: "Test".into(),
-        components: vec![],
-    });
+        components: vec![
+            GameItemComponent::Stackable {
+                max_stack: test_value,
+            },
+            GameItemComponent::Placable,
+        ],
+    };
+
+    item_has_component!(item, GameItemComponent::GroundLoot, { unreachable!() });
+    item_has_component!(
+        item,
+        GameItemComponent::Stackable { max_stack },
+        {
+            assert_eq!(max_stack, &test_value);
+        },
+        { unreachable!() }
+    );
 }
