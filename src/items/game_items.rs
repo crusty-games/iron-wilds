@@ -16,7 +16,7 @@ impl GameItemLoader {
         if let Some(item) = item_query {
             item
         } else {
-            panic!("get_by_id(\"{}\") could not be found", id)
+            panic!("GameItem with ID {} not found", id)
         }
     }
 
