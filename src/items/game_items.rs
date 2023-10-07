@@ -1,7 +1,12 @@
+use lazy_static::lazy_static;
+
 use super::GameItem;
 
+lazy_static! {
+    pub static ref GAME_ITEM_LOADER: GameItemLoader = GameItemLoader::new();
+}
 pub struct GameItemLoader {
-    items: Vec<GameItem>,
+    pub items: Vec<GameItem>,
 }
 
 impl GameItemLoader {
@@ -37,37 +42,4 @@ impl GameItemLoader {
 
         items
     }
-}
-
-#[test]
-pub fn test_no_item_duplicates() {
-    let item_loader = GameItemLoader::new();
-    let items = item_loader.items;
-    let mut ids: Vec<&String> = vec![];
-    let mut names: Vec<&String> = vec![];
-
-    for item in items.iter() {
-        if let Some(_) = ids.iter().find(|s| s == &&&item.id) {
-            panic!("Item ID repeated: {}", item.id)
-        }
-        ids.push(&item.id);
-
-        if let Some(_) = names.iter().find(|s| s == &&&item.name) {
-            panic!("Item name repeated: {}", item.name)
-        }
-        names.push(&item.name);
-    }
-}
-
-#[test]
-pub fn test_get_item() {
-    let item_loader = GameItemLoader::new();
-    item_loader.get_by_id("iron".into());
-}
-
-#[test]
-#[should_panic]
-pub fn test_get_unknown_item() {
-    let item_loader = GameItemLoader::new();
-    item_loader.get_by_id("item_not_in_game".into());
 }

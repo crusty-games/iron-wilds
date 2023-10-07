@@ -1,16 +1,16 @@
-pub mod components;
 pub mod game_items;
 pub mod plugin;
+mod tests;
 
-#[allow(dead_code)]
+#[derive(Clone, Copy)]
 pub enum GameItemComponent {
     Placable,
-    GroundLoot,
+    Pickupable,
     Stackable { max_stack: usize },
     Equipable,
 }
 
-#[allow(dead_code)]
+#[derive(Clone)]
 pub struct GameItem {
     pub id: String,
     pub name: String,
@@ -27,6 +27,12 @@ impl Default for GameItem {
     }
 }
 
+#[derive(Clone)]
+pub struct InventoryItem {
+    pub game_item: GameItem,
+    pub count: usize,
+}
+
 #[macro_export]
 macro_rules! item_has_component {
     ( $item:expr, $pattern:pat, $then:block ) => {
@@ -40,29 +46,4 @@ macro_rules! item_has_component {
         });
         if let Some($pattern) = opt $then else $else
     };
-}
-
-#[test]
-fn test_macro() {
-    let test_value = 36;
-    let item: GameItem = GameItem {
-        id: "test".into(),
-        name: "Test".into(),
-        components: vec![
-            GameItemComponent::Stackable {
-                max_stack: test_value,
-            },
-            GameItemComponent::Placable,
-        ],
-    };
-
-    item_has_component!(item, GameItemComponent::GroundLoot, { unreachable!() });
-    item_has_component!(
-        item,
-        GameItemComponent::Stackable { max_stack },
-        {
-            assert_eq!(max_stack, &test_value);
-        },
-        { unreachable!() }
-    );
 }
