@@ -4,8 +4,10 @@ use crate::bevy_component;
 
 // Item and Modifiers
 bevy_component!(Item);
-bevy_component!(GroundLoot);
+bevy_component!(ItemGroundLoot);
 
 // Item Properties
-bevy_component!(Food);
-bevy_component!(Tool);
+bevy_component!(ItemFood);
+bevy_component!(ItemArmor);
+bevy_component!(ItemBlock);
+bevy_component!(ItemTool);
