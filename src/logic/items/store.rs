@@ -1,10 +1,11 @@
 use lazy_static::lazy_static;
 
-use super::{GameItem, PropFood, PropMaterial};
+use super::{GameItem, PropFood, PropTool};
 
 lazy_static! {
     pub static ref GAME_ITEM_STORE: GameItemStore = GameItemStore::new();
 }
+
 pub struct GameItemStore {
     pub items: Vec<GameItem>,
 }
@@ -34,7 +35,14 @@ impl GameItemStore {
             prop_food: Some(PropFood {
                 health_increase: 20.0,
             }),
-            prop_material: Some(PropMaterial),
+            ..Default::default()
+        });
+
+        items.push(GameItem {
+            id: "pickaxe".into(),
+            name: "Pickaxe".into(),
+            prop_tool: Some(PropTool),
+            ..Default::default()
         });
 
         Self::check_for_dupes(&items);

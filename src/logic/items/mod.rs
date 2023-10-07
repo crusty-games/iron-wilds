@@ -1,19 +1,30 @@
-mod store;
+pub mod store;
 
-#[derive(Clone)]
-pub struct PropFood {
-    health_increase: f32,
+macro_rules! item_prop {
+    ($name:ident) => {
+        #[derive(Clone)]
+        pub struct $name;
+    };
 }
 
 #[derive(Clone)]
-pub struct PropMaterial;
+pub struct PropFood {
+    pub health_increase: f32,
+}
+
+item_prop!(PropArmor);
+item_prop!(PropBlock);
+item_prop!(PropTool);
 
 #[derive(Clone)]
 pub struct GameItem {
     pub id: String,
     pub name: String,
+
     pub prop_food: Option<PropFood>,
-    pub prop_material: Option<PropMaterial>,
+    pub prop_armor: Option<PropArmor>,
+    pub prop_block: Option<PropBlock>,
+    pub prop_tool: Option<PropTool>,
 }
 
 impl Default for GameItem {
@@ -21,8 +32,10 @@ impl Default for GameItem {
         Self {
             id: Default::default(),
             name: Default::default(),
-            prop_food: Default::default(),
-            prop_material: Default::default(),
+            prop_food: None,
+            prop_armor: None,
+            prop_block: None,
+            prop_tool: None,
         }
     }
 }

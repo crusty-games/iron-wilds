@@ -1,10 +1,11 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
-pub struct Item;
+use crate::bevy_component;
 
-#[derive(Component)]
-pub struct Food;
+// Item and Modifiers
+bevy_component!(Item);
+bevy_component!(GroundLoot);
 
-#[derive(Component)]
-pub struct Material;
+// Item Properties
+bevy_component!(Food);
+bevy_component!(Tool);
