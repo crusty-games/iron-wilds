@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_inspector_egui::{prelude::ReflectInspectorOptions, InspectorOptions};
 use std::ops::{Add, Mul};
 
 pub const PHYSICS_TICK_RATE_SECONDS: f32 = 1.0 / 20.0;
@@ -6,6 +7,7 @@ pub struct IronWildsPhysicsPlugin;
 impl Plugin for IronWildsPhysicsPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PhysicsTimer>()
+            .register_type::<Physics>()
             .add_systems(Update, tick_physics_timer)
             .add_systems(Update, compute_physics)
             .add_systems(Update, update_physics_shapes.after(compute_physics));
@@ -25,10 +27,12 @@ impl Default for PhysicsTimer {
     }
 }
 
-#[derive(Component)]
+#[derive(Component, Reflect, InspectorOptions)]
+#[reflect(InspectorOptions)]
 pub struct Physics {
     pub position: Vec2,
     pub velocity: Vec2,
+    #[inspector(min = 0.0, max = 1.0)]
     pub friction: f32,
 }
 
