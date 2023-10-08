@@ -1,7 +1,7 @@
+use crate::systems::setup::{say_hello, spawn_camera};
 use bevy::{log::LogPlugin, prelude::*};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_prototype_lyon::prelude::ShapePlugin;
-
 pub struct IronWildsSetupPlugin;
 impl Plugin for IronWildsSetupPlugin {
     fn build(&self, app: &mut App) {
@@ -15,20 +15,4 @@ impl Plugin for IronWildsSetupPlugin {
             .add_systems(Startup, say_hello)
             .add_systems(Startup, spawn_camera);
     }
-}
-
-fn say_hello() {
-    println!(
-        "\
-░▀█▀░█▀▄░█▀█░█▀█    
-░░█░░█▀▄░█░█░█░█    
-░▀▀▀░▀░▀░▀▀▀░▀░▀    
-░█░█░▀█▀░█░░░█▀▄░█▀▀
-░█▄█░░█░░█░░░█░█░▀▀█
-░▀░▀░▀▀▀░▀▀▀░▀▀░░▀▀▀"
-    );
-}
-
-fn spawn_camera(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
 }
