@@ -2,8 +2,6 @@ use bevy::{log::LogPlugin, prelude::*};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_prototype_lyon::prelude::ShapePlugin;
 
-use crate::logic::items::store::GAME_ITEM_STORE;
-
 pub struct IronWildsSetupPlugin;
 impl Plugin for IronWildsSetupPlugin {
     fn build(&self, app: &mut App) {
@@ -15,7 +13,6 @@ impl Plugin for IronWildsSetupPlugin {
             .add_plugins(ShapePlugin)
             .add_plugins(WorldInspectorPlugin::new())
             .add_systems(Startup, say_hello)
-            .add_systems(Startup, print_items.after(say_hello))
             .add_systems(Startup, spawn_camera);
     }
 }
@@ -30,13 +27,6 @@ fn say_hello() {
 ░█▄█░░█░░█░░░█░█░▀▀█
 ░▀░▀░▀▀▀░▀▀▀░▀▀░░▀▀▀"
     );
-}
-
-fn print_items() {
-    println!("Items loaded in store: {}", GAME_ITEM_STORE.items.len());
-    for item in GAME_ITEM_STORE.items.iter() {
-        println!("{}: {}", item.id, item.name);
-    }
 }
 
 fn spawn_camera(mut commands: Commands) {
