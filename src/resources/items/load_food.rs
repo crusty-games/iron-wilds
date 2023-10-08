@@ -1,4 +1,4 @@
-use crate::components::items::{Consumable, Item};
+use crate::components::items::{Consumable, Destructible, Item, Placable};
 
 use super::utils::ItemConfig;
 
@@ -18,12 +18,14 @@ pub fn load_food_items() -> Vec<ItemConfig> {
 
     items.push(ItemConfig {
         item: Item {
-            id: "bread".into(),
-            name: "Bread".into(),
+            id: "cake".into(),
+            name: "Cake".into(),
         },
         consumable: Some(Consumable {
-            effect_healing: 20.0,
+            effect_healing: 50.0,
         }),
+        placable: Some(Placable::default()),
+        destructible: Some(Destructible),
         ..Default::default()
     });
 
