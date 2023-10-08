@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_prototype_lyon::prelude::{Fill, ShapeBundle};
 
 use super::physics::Physics;
 
@@ -60,6 +61,8 @@ pub struct InventoryItem {
 // Bundles
 #[derive(Bundle)]
 pub struct GroundItemBundle {
-    ground_item: GroundItem,
-    physics: Physics,
+    pub ground_item: GroundItem,
+    pub physics: Physics,
+    pub shape: ShapeBundle,
+    pub fill: Fill,
 }

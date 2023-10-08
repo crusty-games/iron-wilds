@@ -1,10 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{components::items::GroundItem, resources::items::ItemStore};
+use crate::resources::items::ItemStore;
 
 pub fn spawn_items(mut commands: Commands, item_store: Res<ItemStore>) {
     for item in item_store.items.iter() {
-        let entity = item.spawn(&mut commands);
-        commands.entity(entity).insert(GroundItem::default());
+        item.spawn_as_ground_item(&mut commands, Vec2::ZERO);
     }
 }
