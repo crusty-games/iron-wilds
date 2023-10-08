@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use super::physics::Physics;
+
 type PlayerId = usize;
 
 #[derive(Component, Clone, Default)]
@@ -22,7 +24,10 @@ pub struct Consumable {
 
 // Tool/Weapon Related
 #[derive(Component, Clone)]
-pub struct Usable;
+pub struct Tool;
+
+#[derive(Component, Clone)]
+pub struct Weapon;
 
 // Block Related
 #[derive(Component, Clone)]
@@ -43,11 +48,18 @@ pub struct GroundItem {
     pub count: usize,
 }
 
-#[derive(Component, Clone)]
+#[derive(Component, Clone, Default)]
 pub struct BlockItem;
 
 #[derive(Component, Clone, Default)]
 pub struct InventoryItem {
     pub player_id: PlayerId,
     pub stack_count: usize,
+}
+
+// Bundles
+#[derive(Bundle)]
+pub struct GroundItemBundle {
+    ground_item: GroundItem,
+    physics: Physics,
 }

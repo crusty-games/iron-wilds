@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::components::items::{
-    Consumable, Destructible, Harvestable, Item, Placable, Stackable, Usable,
+    Consumable, Destructible, Harvestable, Item, Placable, Stackable, Tool, Weapon,
 };
 
 #[derive(Clone)]
@@ -10,9 +10,10 @@ pub struct ItemConfig {
     pub consumable: Option<Consumable>,
     pub stackable: Option<Stackable>,
     pub placable: Option<Placable>,
-    pub usable: Option<Usable>,
     pub destructible: Option<Destructible>,
     pub harvestable: Option<Harvestable>,
+    pub tool: Option<Tool>,
+    pub weapon: Option<Weapon>,
 }
 
 impl Default for ItemConfig {
@@ -22,9 +23,10 @@ impl Default for ItemConfig {
             consumable: None,
             stackable: None,
             placable: None,
-            usable: None,
             destructible: None,
             harvestable: None,
+            tool: None,
+            weapon: None,
         }
     }
 }
@@ -44,9 +46,10 @@ impl ItemConfig {
         add_component!(entity, self.consumable);
         add_component!(entity, self.stackable);
         add_component!(entity, self.placable);
-        add_component!(entity, self.usable);
         add_component!(entity, self.destructible);
         add_component!(entity, self.harvestable);
+        add_component!(entity, self.tool);
+        add_component!(entity, self.weapon);
         entity.id()
     }
 }

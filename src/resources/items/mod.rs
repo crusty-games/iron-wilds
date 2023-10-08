@@ -1,9 +1,9 @@
+pub mod config;
 mod load_food;
-pub mod utils;
 
 use bevy::prelude::*;
 
-use self::{load_food::load_food_items, utils::ItemConfig};
+use self::{config::ItemConfig, load_food::load_food_items};
 
 #[derive(Resource)]
 pub struct ItemStore {

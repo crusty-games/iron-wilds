@@ -1,6 +1,6 @@
 use crate::components::items::{Consumable, Destructible, Item, Placable};
 
-use super::utils::ItemConfig;
+use super::config::ItemConfig;
 
 pub fn load_food_items() -> Vec<ItemConfig> {
     let mut items: Vec<ItemConfig> = vec![];
