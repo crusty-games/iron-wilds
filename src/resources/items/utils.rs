@@ -38,7 +38,7 @@ macro_rules! add_component {
 }
 
 impl ItemConfig {
-    pub fn spawn(&self, commands: &mut Commands) {
+    pub fn spawn(&self, commands: &mut Commands) -> Entity {
         let mut entity = commands.spawn(self.item.clone());
         entity.insert(Name::from(self.item.name.clone()));
         add_component!(entity, self.consumable);
@@ -47,5 +47,6 @@ impl ItemConfig {
         add_component!(entity, self.usable);
         add_component!(entity, self.destructible);
         add_component!(entity, self.harvestable);
+        entity.id()
     }
 }
