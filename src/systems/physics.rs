@@ -16,3 +16,18 @@ pub fn compute_physics(mut physics_query: Query<&mut Physics>, physics_timer: Re
         }
     }
 }
+
+pub fn update_physics_shapes(
+    mut player_query: Query<(&Physics, &mut Transform)>,
+    physics_timer: Res<PhysicsTimer>,
+) {
+    let perc_left = physics_timer.main_tick.percent();
+    for (object, mut transform) in player_query.iter_mut() {
+        let lerp = object.position + (object.velocity * perc_left);
+        transform.translation = Vec3 {
+            x: lerp.x,
+            y: lerp.y,
+            z: transform.translation.z,
+        }
+    }
+}

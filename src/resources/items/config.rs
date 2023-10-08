@@ -74,7 +74,7 @@ impl ItemConfig {
                     y: random::<f32>() - 0.5,
                 }
                 .normalize()
-                    * 2.0,
+                    * 10.0,
                 friction: 0.8,
             },
             shape: ShapeBundle {
