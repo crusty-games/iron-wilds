@@ -18,8 +18,15 @@ pub struct Item {
     pub count: usize,
 }
 
-#[derive(Bundle)]
+#[derive(Component)]
 pub struct ItemGroundLoot {
+    // pub previous_owner: PlayerId,
+    // pub expiration: Duration,
+}
+
+#[derive(Bundle)]
+pub struct ItemGroundLootBundle {
+    ground_loot: ItemGroundLoot,
     physics: Physics,
     shape: ShapeBundle,
     fill: Fill,
@@ -38,14 +45,11 @@ impl Plugin for IronWildsItemsPlugin {
     }
 }
 
-fn create_ground_loot_bundle(
-    game_item: GameItem,
-    count: usize,
-    position: Vec2,
-) -> (Item, ItemGroundLoot) {
+fn create_ground_loot_bundle(game_item: GameItem, count: usize, position: Vec2) -> impl Bundle {
     (
         Item { game_item, count },
-        ItemGroundLoot {
+        ItemGroundLootBundle {
+            ground_loot: ItemGroundLoot {},
             physics: Physics {
                 position,
                 velocity: Vec2 {
@@ -71,7 +75,6 @@ fn create_ground_loot_bundle(
 
 fn spawn_items(mut commands: Commands) {
     let game_item = GAME_ITEM_STORE.get_by_id("bread".into());
-
     commands.spawn(create_ground_loot_bundle(game_item.clone(), 1, Vec2::ZERO));
     commands.spawn(create_ground_loot_bundle(game_item.clone(), 1, Vec2::ZERO));
     commands.spawn(create_ground_loot_bundle(game_item.clone(), 1, Vec2::ZERO));
