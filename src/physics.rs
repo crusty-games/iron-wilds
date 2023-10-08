@@ -7,7 +7,8 @@ impl Plugin for IronWildsPhysicsPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PhysicsTimer>()
             .add_systems(Update, tick_physics_timer)
-            .add_systems(Update, compute_physics);
+            .add_systems(Update, compute_physics)
+            .add_systems(Update, update_physics_shapes.after(compute_physics));
     }
 }
 
@@ -50,6 +51,21 @@ pub fn compute_physics(mut physics_query: Query<&mut Physics>, physics_timer: Re
         for mut obj in physics_query.iter_mut() {
             obj.velocity = obj.velocity.mul(obj.friction);
             obj.position = obj.position.add(obj.velocity);
+        }
+    }
+}
+
+fn update_physics_shapes(
+    mut player_query: Query<(&Physics, &mut Transform)>,
+    physics_timer: Res<PhysicsTimer>,
+) {
+    let perc_left = physics_timer.main_tick.percent();
+    for (object, mut transform) in player_query.iter_mut() {
+        let lerp = object.position + (object.velocity * perc_left);
+        transform.translation = Vec3 {
+            x: lerp.x,
+            y: lerp.y,
+            z: transform.translation.z,
         }
     }
 }
