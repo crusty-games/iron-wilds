@@ -17,7 +17,6 @@ impl GameItemStore {
         }
     }
 
-    #[allow(dead_code)]
     pub fn get_by_id(&self, id: String) -> &GameItem {
         match self.items.iter().find(|i| i.id == id) {
             Some(item) => item,
