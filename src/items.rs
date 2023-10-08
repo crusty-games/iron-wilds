@@ -6,7 +6,6 @@ use bevy_prototype_lyon::{
 use rand::random;
 
 use crate::{
-    bevy_component,
     logic::items::{store::GAME_ITEM_STORE, GameItem},
     physics::Physics,
 };
@@ -20,8 +19,7 @@ pub struct Item {
 
 #[derive(Component)]
 pub struct ItemGroundLoot {
-    // pub previous_owner: PlayerId,
-    // pub expiration: Duration,
+    // pub previous_owner: Option<PlayerId>,
 }
 
 #[derive(Bundle)]
@@ -32,12 +30,6 @@ pub struct ItemGroundLootBundle {
     fill: Fill,
 }
 
-// Item Properties
-bevy_component!(ItemFood);
-bevy_component!(ItemArmor);
-bevy_component!(ItemBlock);
-bevy_component!(ItemTool);
-
 pub struct IronWildsItemsPlugin;
 impl Plugin for IronWildsItemsPlugin {
     fn build(&self, app: &mut App) {
@@ -45,7 +37,7 @@ impl Plugin for IronWildsItemsPlugin {
     }
 }
 
-fn create_ground_loot_bundle(game_item: GameItem, count: usize, position: Vec2) -> impl Bundle {
+fn create_ground_loot(game_item: GameItem, count: usize, position: Vec2) -> impl Bundle {
     (
         Item { game_item, count },
         ItemGroundLootBundle {
@@ -75,7 +67,7 @@ fn create_ground_loot_bundle(game_item: GameItem, count: usize, position: Vec2) 
 
 fn spawn_items(mut commands: Commands) {
     let game_item = GAME_ITEM_STORE.get_by_id("bread".into());
-    commands.spawn(create_ground_loot_bundle(game_item.clone(), 1, Vec2::ZERO));
-    commands.spawn(create_ground_loot_bundle(game_item.clone(), 1, Vec2::ZERO));
-    commands.spawn(create_ground_loot_bundle(game_item.clone(), 1, Vec2::ZERO));
+    commands.spawn(create_ground_loot(game_item.clone(), 1, Vec2::ZERO));
+    commands.spawn(create_ground_loot(game_item.clone(), 1, Vec2::ZERO));
+    commands.spawn(create_ground_loot(game_item.clone(), 1, Vec2::ZERO));
 }

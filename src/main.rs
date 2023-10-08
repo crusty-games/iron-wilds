@@ -4,7 +4,6 @@ mod logic;
 mod physics;
 mod player;
 mod setup;
-mod utils;
 
 use inputs::IronWildsInputsPlugin;
 use items::IronWildsItemsPlugin;
