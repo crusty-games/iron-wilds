@@ -1,12 +1,12 @@
-mod inputs;
-mod physics;
-mod player;
-mod setup;
+mod components;
+mod plugins;
+mod resources;
+mod systems;
 
-use inputs::IronWildsInputsPlugin;
-use physics::IronWildsPhysicsPlugin;
-use player::IronWildsPlayerPlugin;
-use setup::IronWildsSetupPlugin;
+use plugins::inputs::IronWildsInputsPlugin;
+use plugins::physics::IronWildsPhysicsPlugin;
+use plugins::player::IronWildsPlayerPlugin;
+use plugins::setup::IronWildsSetupPlugin;
 
 use bevy::prelude::*;
 

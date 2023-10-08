@@ -1,18 +1,9 @@
+use crate::components::physics::Physics;
+use crate::components::player::Player;
+use crate::resources::physics::PhysicsTimer;
 use bevy::prelude::*;
 
-use crate::{
-    physics::{compute_physics, Physics, PhysicsTimer},
-    player::Player,
-};
-
-pub struct IronWildsInputsPlugin;
-impl Plugin for IronWildsInputsPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_systems(Update, move_player.before(compute_physics));
-    }
-}
-
-fn move_player(
+pub fn move_player(
     mut player_query: Query<(&Player, &mut Physics)>,
     keyboard_input: Res<Input<KeyCode>>,
     physics_timer: Res<PhysicsTimer>,

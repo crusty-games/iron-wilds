@@ -1,22 +1,10 @@
+use crate::components::physics::Physics;
+use crate::components::player::Player;
+use crate::resources::physics::PhysicsTimer;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::physics::{compute_physics, Physics, PhysicsTimer};
-
-pub struct IronWildsPlayerPlugin;
-impl Plugin for IronWildsPlayerPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_player)
-            .add_systems(Update, update_player_shape.after(compute_physics));
-    }
-}
-
-#[derive(Component)]
-pub struct Player {
-    pub movement_speed: f32,
-}
-
-fn spawn_player(mut commands: Commands) {
+pub fn spawn_player(mut commands: Commands) {
     let shape = shapes::Circle {
         radius: 20.0,
         ..default()
@@ -38,7 +26,7 @@ fn spawn_player(mut commands: Commands) {
     ));
 }
 
-fn update_player_shape(
+pub fn update_player_shape(
     mut player_query: Query<(&Physics, &mut Transform), With<Player>>,
     physics_timer: Res<PhysicsTimer>,
 ) {
