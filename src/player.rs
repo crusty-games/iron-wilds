@@ -1,12 +1,13 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::physics::Physics;
+use crate::physics::{compute_physics, Physics, PhysicsTimer};
 
 pub struct IronWildsPlayerPlugin;
 impl Plugin for IronWildsPlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_player);
+        app.add_systems(Startup, spawn_player)
+            .add_systems(Update, update_player_shape.after(compute_physics));
     }
 }
 
@@ -35,4 +36,19 @@ fn spawn_player(mut commands: Commands) {
             ..default()
         },
     ));
+}
+
+fn update_player_shape(
+    mut player_query: Query<(&Physics, &mut Transform), With<Player>>,
+    physics_timer: Res<PhysicsTimer>,
+) {
+    let perc_left = physics_timer.main_tick.percent();
+    for (object, mut transform) in player_query.iter_mut() {
+        let lerp = object.position + (object.velocity * perc_left);
+        transform.translation = Vec3 {
+            x: lerp.x,
+            y: lerp.y,
+            z: 0.0,
+        }
+    }
 }
