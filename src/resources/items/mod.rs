@@ -21,13 +21,17 @@ impl Default for ItemStore {
 impl ItemStore {
     fn load_items() -> Vec<ItemConfig> {
         let mut items: Vec<ItemConfig> = vec![];
-
         items.append(&mut load_food_items());
-
         for item in items.iter() {
             println!("Item loaded: {}", item.item.id);
         }
-
         items
+    }
+
+    pub fn get_by_id(&self, id: String) -> &ItemConfig {
+        match self.items.iter().find(|item| item.item.id == id) {
+            Some(item) => item,
+            None => panic!("Item by ID \"${id}\" not found"),
+        }
     }
 }
