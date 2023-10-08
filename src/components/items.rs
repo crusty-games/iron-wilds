@@ -27,8 +27,10 @@ pub struct Consumable {
 #[derive(Component, Clone)]
 pub struct Tool;
 
-#[derive(Component, Clone)]
-pub struct Weapon;
+#[derive(Component, Clone, Default)]
+pub struct Weapon {
+    pub base_damage: f32,
+}
 
 // Block Related
 #[derive(Component, Clone)]
