@@ -33,4 +33,7 @@ impl ItemConfig {
     pub fn id(&self) -> &String {
         &self.item.id
     }
+    pub fn name(&self) -> &String {
+        &self.item.name
+    }
 }

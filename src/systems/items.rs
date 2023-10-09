@@ -30,6 +30,7 @@ pub fn spawn_item_event_handler(
     for event in spawn_item_event.iter() {
         let item = item_store.get_by_id(event.item_id.clone());
         let mut entity_commands = commands.spawn_empty();
+        entity_commands.insert(Name::from(item.name().clone()));
         add_component!(entity_commands, item.consumable);
         add_component!(entity_commands, item.stackable);
         add_component!(entity_commands, item.placable);
