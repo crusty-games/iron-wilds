@@ -11,6 +11,15 @@ pub struct Item {
     pub name: String,
 }
 
+impl Item {
+    pub fn new<S: AsRef<str>>(id: S, name: S) -> Self {
+        Self {
+            id: id.as_ref().into(),
+            name: name.as_ref().into(),
+        }
+    }
+}
+
 // Food Related
 #[derive(Component, Clone, Default)]
 pub struct Placable {

@@ -6,10 +6,7 @@ pub fn load_food_items() -> Vec<ItemConfig> {
     let mut items: Vec<ItemConfig> = vec![];
 
     items.push(ItemConfig {
-        item: Item {
-            id: "bread".into(),
-            name: "Bread".into(),
-        },
+        item: Item::new("bread", "Bread"),
         consumable: Some(Consumable {
             effect_healing: 20.0,
         }),
@@ -17,10 +14,7 @@ pub fn load_food_items() -> Vec<ItemConfig> {
     });
 
     items.push(ItemConfig {
-        item: Item {
-            id: "cake".into(),
-            name: "Cake".into(),
-        },
+        item: Item::new("cake", "Cake"),
         consumable: Some(Consumable {
             effect_healing: 50.0,
         }),
