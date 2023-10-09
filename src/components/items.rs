@@ -3,8 +3,6 @@ use bevy_prototype_lyon::prelude::{Fill, ShapeBundle};
 
 use super::physics::Physics;
 
-type PlayerId = usize;
-
 #[derive(Component, Clone, Default)]
 pub struct Item {
     pub id: String,
@@ -65,7 +63,6 @@ pub struct BlockItem;
 
 #[derive(Component, Clone, Default)]
 pub struct InventoryItem {
-    pub player_id: PlayerId,
     pub stack_count: usize,
 }
 
