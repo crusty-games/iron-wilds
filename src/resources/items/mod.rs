@@ -3,12 +3,13 @@ mod load_food;
 mod load_weapons;
 
 use bevy::prelude::*;
+use std::collections::HashMap;
 
 use self::{config::ItemConfig, load_food::load_food_items, load_weapons::load_weapon_items};
 
 #[derive(Resource)]
 pub struct ItemStore {
-    pub items: Vec<ItemConfig>,
+    pub items: HashMap<String, ItemConfig>,
 }
 
 impl Default for ItemStore {
@@ -19,21 +20,28 @@ impl Default for ItemStore {
     }
 }
 
-impl ItemStore {
-    fn load_items() -> Vec<ItemConfig> {
-        let mut items: Vec<ItemConfig> = vec![];
-        items.append(&mut load_weapon_items());
-        items.append(&mut load_food_items());
-        for item in items.iter() {
-            println!("Item loaded: {}", item.item.id);
+macro_rules! load_items {
+    ($items:expr, $load:ident) => {
+        for item in &mut $load() {
+            println!("Loaded item {}:{}", item.id(), item.name());
+            $items.insert(item.id().clone(), item.to_owned());
         }
+    };
+}
+
+impl ItemStore {
+    fn load_items() -> HashMap<String, ItemConfig> {
+        let mut items: HashMap<String, ItemConfig> = HashMap::new();
+        load_items!(items, load_weapon_items);
+        load_items!(items, load_food_items);
         items
     }
 
-    pub fn get_by_id(&self, id: String) -> &ItemConfig {
-        match self.items.iter().find(|item| item.item.id == id) {
+    pub fn get<S: AsRef<str>>(&self, id: S) -> &ItemConfig {
+        let id_ref = id.as_ref();
+        match self.items.get(id_ref) {
             Some(item) => item,
-            None => panic!("Item by ID \"${id}\" not found"),
+            None => panic!("Item by ID \"${id_ref}\" not found"),
         }
     }
 }

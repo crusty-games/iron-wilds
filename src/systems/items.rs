@@ -28,7 +28,7 @@ pub fn spawn_item_event_handler(
     item_store: Res<ItemStore>,
 ) {
     for event in spawn_item_event.iter() {
-        let item = item_store.get_by_id(event.item_id.clone());
+        let item = item_store.get(&event.item_id);
         let mut entity_commands = commands.spawn_empty();
         entity_commands.insert(Name::from(item.name().clone()));
         add_component!(entity_commands, item.consumable);
@@ -69,19 +69,19 @@ pub fn spawn_item_event_handler(
 }
 
 pub fn spawn_items(mut spawn_item_event: EventWriter<SpawnItemEvent>, item_store: Res<ItemStore>) {
-    for item in item_store.items.iter() {
-        spawn_item_event.send(SpawnItemEvent {
-            item_id: item.id().clone(),
-            spawn_as: SpawnItemAs::GroundLoot {
+    for (id, _) in item_store.items.iter() {
+        spawn_item_event.send(SpawnItemEvent::new(
+            id,
+            SpawnItemAs::GroundLoot {
                 position: Vec2::ZERO,
             },
-        })
+        ))
     }
 
-    spawn_item_event.send(SpawnItemEvent {
-        item_id: "bread".into(),
-        spawn_as: SpawnItemAs::GroundLoot {
+    spawn_item_event.send(SpawnItemEvent::new(
+        "bread",
+        SpawnItemAs::GroundLoot {
             position: Vec2::ZERO,
         },
-    })
+    ))
 }
