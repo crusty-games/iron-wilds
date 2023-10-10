@@ -21,10 +21,10 @@ impl Default for ItemStore {
 }
 
 macro_rules! load_items {
-    ($items:expr, $load:ident) => {
-        for item in &mut $load() {
+    ($items:ident, $load:ident) => {
+        for item in $load().into_iter() {
             println!("Loaded item {}:{}", item.id, item.name);
-            $items.insert(item.id.clone(), item.to_owned());
+            $items.insert(item.id.clone(), item);
         }
     };
 }

@@ -18,7 +18,7 @@ pub fn load_food_items() -> Vec<ItemConfig> {
         consumable: Some(Consumable {
             effect_healing: 50.0,
         }),
-        placable: Some(Placable::default()),
+        placable: Some(Placable),
         destructible: Some(Destructible),
         ..Default::default()
     });
