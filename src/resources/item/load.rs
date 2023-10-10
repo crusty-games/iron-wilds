@@ -1,9 +1,9 @@
-use super::{Consumable, Destructible, Item, Placable, Weapon};
+use super::config::{Consumable, Destructible, ItemConfig, Placable, Weapon};
 
-pub fn load_sample_items() -> Vec<Item> {
-    let mut items: Vec<Item> = vec![];
+pub fn load_sample_items() -> Vec<ItemConfig> {
+    let mut items: Vec<ItemConfig> = vec![];
 
-    items.push(Item {
+    items.push(ItemConfig {
         id: "bread".into(),
         name: "Bread".into(),
         max_stack_count: 12,
@@ -13,7 +13,7 @@ pub fn load_sample_items() -> Vec<Item> {
         ..Default::default()
     });
 
-    items.push(Item {
+    items.push(ItemConfig {
         id: "cake".into(),
         name: "Cake".into(),
         max_stack_count: 4,
@@ -25,7 +25,7 @@ pub fn load_sample_items() -> Vec<Item> {
         ..Default::default()
     });
 
-    items.push(Item {
+    items.push(ItemConfig {
         id: "sword".into(),
         name: "Sword".into(),
         max_stack_count: 1,

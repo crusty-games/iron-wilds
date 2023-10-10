@@ -2,7 +2,7 @@ use std::ops::Add;
 
 use bevy::{prelude::*, utils::HashMap};
 
-use crate::game::items::store::ItemStore;
+use crate::resources::item::store::ItemStore;
 
 #[derive(Clone, Debug)]
 pub struct StorageItem {

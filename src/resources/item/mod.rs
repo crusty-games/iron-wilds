@@ -1,6 +1,10 @@
+pub mod config;
+pub mod load;
+pub mod store;
+
 use bevy::prelude::*;
 
-use crate::game::items::store::{ItemStore, ITEM_STORE};
+use self::store::{ItemStore, ITEM_STORE};
 
 #[derive(Resource)]
 pub struct Items {

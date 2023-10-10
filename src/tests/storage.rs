@@ -3,7 +3,7 @@ mod storage {
     use std::collections::HashMap;
 
     use crate::components::storage::{Storage, StorageItem};
-    use crate::game::items::{store::ItemStore, Item};
+    use crate::resources::item::{config::ItemConfig, store::ItemStore};
 
     const BREAD: &str = "bread";
     const SWORD: &str = "sword";
@@ -18,7 +18,7 @@ mod storage {
         let id = String::from(BREAD);
         item_store.items.insert(
             id.clone(),
-            Item {
+            ItemConfig {
                 id,
                 max_stack_count: 4,
                 ..Default::default()
@@ -28,7 +28,7 @@ mod storage {
         let id = String::from(SWORD);
         item_store.items.insert(
             id.clone(),
-            Item {
+            ItemConfig {
                 id,
                 max_stack_count: 1,
                 ..Default::default()
@@ -38,7 +38,7 @@ mod storage {
         let id = String::from(STONE);
         item_store.items.insert(
             id.clone(),
-            Item {
+            ItemConfig {
                 id,
                 max_stack_count: 12,
                 ..Default::default()

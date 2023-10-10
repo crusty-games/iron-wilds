@@ -1,8 +1,5 @@
-mod load;
-pub mod store;
-
 #[derive(Default)]
-pub struct Item {
+pub struct ItemConfig {
     pub id: String,
     pub name: String,
     pub max_stack_count: usize,
