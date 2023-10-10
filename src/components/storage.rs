@@ -2,7 +2,7 @@ use std::ops::Add;
 
 use bevy::{prelude::*, utils::HashMap};
 
-use crate::game::items::store::WithItemStore;
+use crate::game::items::store::ItemStore;
 
 #[derive(Clone, Debug)]
 pub struct StorageItem {
@@ -31,15 +31,12 @@ impl Storage {
         Self { capacity, items }
     }
 
-    pub fn add_item(&mut self, storage_item: &WithItemStore<StorageItem>) {
-        let WithItemStore {
-            item_store,
-            payload: StorageItem { item_id, .. },
-        } = storage_item;
+    pub fn add_item(&mut self, item_store: &ItemStore, storage_item: &StorageItem) {
+        let StorageItem { item_id, .. } = storage_item;
 
         let item = item_store.get(&item_id);
-        let can_fit = self.get_target_slots(storage_item);
-        for fit in can_fit.iter() {
+        let target_slots = self.get_target_slots(item_store, storage_item);
+        for fit in target_slots.iter() {
             match self.items.get_mut(&fit.slot_index).unwrap() {
                 Some(StorageItem {
                     item_id: storage_item_id,
@@ -75,18 +72,18 @@ impl Storage {
         }
     }
 
-    pub fn get_target_slots(&self, storage_item: &WithItemStore<StorageItem>) -> Vec<TargetSlot> {
-        let WithItemStore {
-            item_store,
-            payload:
-                StorageItem {
-                    item_id,
-                    stack_count,
-                },
+    pub fn get_target_slots(
+        &self,
+        item_store: &ItemStore,
+        storage_item: &StorageItem,
+    ) -> Vec<TargetSlot> {
+        let StorageItem {
+            item_id,
+            stack_count,
         } = storage_item;
 
         let item = item_store.get(&item_id);
-        let mut can_fit: Vec<TargetSlot> = Vec::new();
+        let mut target_slots: Vec<TargetSlot> = Vec::new();
         let mut stack_left = stack_count.clone();
         for slot_index in 0..self.capacity {
             let storage_item = self.items.get(&slot_index).unwrap();
@@ -102,7 +99,7 @@ impl Storage {
                     let stack_taken = stack_left.min(&item.max_stack_count - storage_stack_count);
                     if stack_taken > 0 {
                         stack_left -= stack_taken;
-                        can_fit.push(TargetSlot {
+                        target_slots.push(TargetSlot {
                             stack_count: stack_taken,
                             slot_index: slot_index.clone(),
                         })
@@ -112,13 +109,13 @@ impl Storage {
                 let stack_taken = stack_left.min(item.max_stack_count);
                 if stack_taken > 0 {
                     stack_left -= stack_taken;
-                    can_fit.push(TargetSlot {
+                    target_slots.push(TargetSlot {
                         stack_count: stack_taken,
                         slot_index: slot_index.clone(),
                     })
                 }
             }
         }
-        can_fit
+        target_slots
     }
 }

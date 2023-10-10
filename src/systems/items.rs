@@ -1,31 +1,25 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::{
-    prelude::{Fill, GeometryBuilder, ShapeBundle},
-    shapes::Circle,
-};
+use bevy_prototype_lyon::{prelude::*, shapes::Circle};
 use rand::{random, thread_rng, Rng};
 
-use crate::{
-    components::{
-        items::{GroundItem, GroundItemBundle},
-        physics::{Gravitate, GravitateToPlayer, Physics},
-    },
-    events::items::{SpawnItemEvent, SpawnKind},
-    game::items::store::ITEM_STORE,
-};
+use crate::components::items::{GroundItem, GroundItemBundle};
+use crate::components::physics::{Gravitate, GravitateToPlayer, Physics};
+use crate::events::items::{SpawnItemEvent, SpawnKind};
+use crate::resources::item::Items;
 
 pub fn spawn_item_event_handler(
     mut commands: Commands,
-    mut spawn_item_event: EventReader<SpawnItemEvent>,
+    mut spawn_event: EventReader<SpawnItemEvent>,
+    items: Res<Items>,
 ) {
-    for event in spawn_item_event.iter() {
+    for event in spawn_event.iter() {
         match event.kind.clone() {
             SpawnKind::GroundLoot {
                 item_id,
                 stack_count,
                 position,
             } => {
-                let item = ITEM_STORE.get(&item_id);
+                let item = items.store.get(&item_id);
                 commands.spawn((
                     Name::from(item.name.clone()),
                     GroundItemBundle {
@@ -60,10 +54,10 @@ pub fn spawn_item_event_handler(
     }
 }
 
-pub fn spawn_items(mut spawn_item_event: EventWriter<SpawnItemEvent>) {
-    for (id, _) in ITEM_STORE.items.iter() {
+pub fn spawn_items(mut spawn_event: EventWriter<SpawnItemEvent>, items: Res<Items>) {
+    for (id, _) in items.store.items.iter() {
         for _ in 0..10 {
-            spawn_item_event.send(SpawnItemEvent {
+            spawn_event.send(SpawnItemEvent {
                 kind: SpawnKind::GroundLoot {
                     item_id: id.clone(),
                     stack_count: thread_rng().gen_range(1..2),

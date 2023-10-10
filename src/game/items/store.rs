@@ -33,25 +33,3 @@ impl ItemStore {
         }
     }
 }
-
-pub struct WithItemStore<'a, T> {
-    pub item_store: &'a ItemStore,
-    pub payload: T,
-}
-
-impl<'a, T> WithItemStore<'a, T> {
-    pub fn global(payload: T) -> WithItemStore<'a, T> {
-        Self {
-            item_store: &ITEM_STORE,
-            payload,
-        }
-    }
-
-    #[cfg(test)]
-    pub fn injected(item_store: &'a ItemStore, payload: T) -> Self {
-        Self {
-            item_store,
-            payload,
-        }
-    }
-}

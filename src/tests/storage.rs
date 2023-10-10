@@ -2,13 +2,8 @@
 mod storage {
     use std::collections::HashMap;
 
-    use crate::{
-        components::storage::{Storage, StorageItem},
-        game::items::{
-            store::{ItemStore, WithItemStore},
-            Item,
-        },
-    };
+    use crate::components::storage::{Storage, StorageItem};
+    use crate::game::items::{store::ItemStore, Item};
 
     const BREAD: &str = "bread";
     const SWORD: &str = "sword";
@@ -63,13 +58,13 @@ mod storage {
             assert!(matches!(test_storage.items.get(&slot_index).unwrap(), None));
         }
 
-        test_storage.add_item(&WithItemStore::injected(
+        test_storage.add_item(
             &item_store,
-            StorageItem {
+            &StorageItem {
                 item_id: STONE.into(),
                 stack_count: 8,
             },
-        ));
+        );
         let first_slot = test_storage.items.get(&0).unwrap().clone().unwrap();
         assert_eq!(first_slot.item_id, STONE);
         assert_eq!(first_slot.stack_count, 8);
@@ -77,13 +72,13 @@ mod storage {
             assert!(matches!(test_storage.items.get(&slot_index).unwrap(), None));
         }
 
-        test_storage.add_item(&WithItemStore::injected(
+        test_storage.add_item(
             &item_store,
-            StorageItem {
+            &StorageItem {
                 item_id: SWORD.into(),
                 stack_count: 2,
             },
-        ));
+        );
         let first_slot = test_storage.items.get(&0).unwrap().clone().unwrap();
         assert_eq!(first_slot.item_id, STONE);
         assert_eq!(first_slot.stack_count, 8);
@@ -98,13 +93,13 @@ mod storage {
 
         assert!(matches!(test_storage.items.get(&3).unwrap(), None));
 
-        test_storage.add_item(&WithItemStore::injected(
+        test_storage.add_item(
             &item_store,
-            StorageItem {
+            &StorageItem {
                 item_id: STONE.into(),
                 stack_count: 6,
             },
-        ));
+        );
         let first_slot = test_storage.items.get(&0).unwrap().clone().unwrap();
         assert_eq!(first_slot.item_id, STONE);
         assert_eq!(first_slot.stack_count, 12);
@@ -121,13 +116,13 @@ mod storage {
         assert_eq!(fourth_slot.item_id, STONE);
         assert_eq!(fourth_slot.stack_count, 2);
 
-        let try_full = test_storage.get_target_slots(&WithItemStore::injected(
+        let try_full = test_storage.get_target_slots(
             &item_store,
-            StorageItem {
+            &StorageItem {
                 item_id: BREAD.into(),
                 stack_count: 4,
             },
-        ));
+        );
         assert_eq!(try_full.len(), 0);
     }
 }
