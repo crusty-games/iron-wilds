@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::events::items::SpawnItemEvent;
-use crate::resources::item::Items;
+use crate::resources::items::Items;
 use crate::systems::items::{spawn_item_event_handler, spawn_items};
 
 pub struct IronWildsItemsPlugin;

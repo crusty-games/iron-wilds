@@ -3,7 +3,7 @@ mod storage {
     use std::collections::HashMap;
 
     use crate::components::storage::{Storage, StorageItem};
-    use crate::resources::item::{config::ItemConfig, store::ItemStore};
+    use crate::resources::items::{config::ItemConfig, store::ItemStore};
 
     const BREAD: &str = "bread";
     const SWORD: &str = "sword";

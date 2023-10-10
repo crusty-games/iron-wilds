@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::components::items::GroundItem;
 use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::{physics::Physics, storage::StorageItem};
-use crate::resources::{inventory::Inventory, item::Items};
+use crate::resources::{inventory::Inventory, items::Items};
 
 pub fn pick_up_ground_items(
     mut commands: Commands,

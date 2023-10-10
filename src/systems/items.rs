@@ -5,7 +5,7 @@ use rand::{random, thread_rng, Rng};
 use crate::components::items::{GroundItem, GroundItemBundle};
 use crate::components::physics::{Gravitate, GravitateToPlayer, Physics};
 use crate::events::items::{SpawnItemEvent, SpawnKind};
-use crate::resources::item::Items;
+use crate::resources::items::Items;
 
 pub fn spawn_item_event_handler(
     mut commands: Commands,
