@@ -10,7 +10,7 @@ use crate::{
         items::{GroundItem, GroundItemBundle},
         physics::Physics,
     },
-    events::items::{SpawnItemAs, SpawnItemEvent},
+    events::items::{SpawnItemEvent, SpawnKind},
     resources::items::ItemStore,
 };
 
@@ -20,34 +20,41 @@ pub fn spawn_item_event_handler(
     item_store: Res<ItemStore>,
 ) {
     for event in spawn_item_event.iter() {
-        let item = item_store.get(&event.item_id);
-        let mut entity_commands = commands.spawn_empty();
-        entity_commands.insert(Name::from(item.name.clone()));
-
-        match event.spawn_as {
-            SpawnItemAs::GroundLoot { position } => {
-                entity_commands.insert(GroundItemBundle {
-                    ground_item: GroundItem::default(),
-                    physics: Physics {
-                        position,
-                        velocity: Vec2 {
-                            x: random::<f32>() - 0.5,
-                            y: random::<f32>() - 0.5,
-                        }
-                        .normalize()
-                            * 10.0,
-                        friction: 0.8,
-                    },
-                    shape: ShapeBundle {
-                        path: GeometryBuilder::build_as(&Circle {
-                            radius: 5.0,
+        match event.kind.clone() {
+            SpawnKind::GroundLoot {
+                item_id,
+                stack_count,
+                position,
+            } => {
+                let item = item_store.get(&item_id);
+                commands.spawn((
+                    Name::from(item.name.clone()),
+                    GroundItemBundle {
+                        ground_item: GroundItem {
+                            item_id,
+                            stack_count,
+                        },
+                        physics: Physics {
+                            position,
+                            velocity: Vec2 {
+                                x: random::<f32>() - 0.5,
+                                y: random::<f32>() - 0.5,
+                            }
+                            .normalize()
+                                * 10.0,
+                            friction: 0.8,
+                        },
+                        shape: ShapeBundle {
+                            path: GeometryBuilder::build_as(&Circle {
+                                radius: 5.0,
+                                ..default()
+                            }),
+                            transform: Transform::from_xyz(0.0, 0.0, 1.0),
                             ..default()
-                        }),
-                        transform: Transform::from_xyz(0.0, 0.0, 1.0),
-                        ..default()
+                        },
+                        fill: Fill::color(Color::RED),
                     },
-                    fill: Fill::color(Color::RED),
-                });
+                ));
             }
         }
     }
@@ -55,18 +62,20 @@ pub fn spawn_item_event_handler(
 
 pub fn spawn_items(mut spawn_item_event: EventWriter<SpawnItemEvent>, item_store: Res<ItemStore>) {
     for (id, _) in item_store.items.iter() {
-        spawn_item_event.send(SpawnItemEvent::new(
-            id,
-            SpawnItemAs::GroundLoot {
+        spawn_item_event.send(SpawnItemEvent {
+            kind: SpawnKind::GroundLoot {
+                item_id: id.clone(),
+                stack_count: 1,
                 position: Vec2::ZERO,
             },
-        ))
+        })
     }
 
-    spawn_item_event.send(SpawnItemEvent::new(
-        "bread",
-        SpawnItemAs::GroundLoot {
+    spawn_item_event.send(SpawnItemEvent {
+        kind: SpawnKind::GroundLoot {
+            item_id: "bread".into(),
+            stack_count: 1,
             position: Vec2::ZERO,
         },
-    ))
+    })
 }

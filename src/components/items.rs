@@ -4,10 +4,10 @@ use bevy_prototype_lyon::prelude::{Fill, ShapeBundle};
 use super::physics::Physics;
 
 // Item State Modifer
-#[derive(Component, Clone, Default)]
+#[derive(Component)]
 pub struct GroundItem {
     pub item_id: String,
-    pub count: usize,
+    pub stack_count: usize,
 }
 
 // Bundles
