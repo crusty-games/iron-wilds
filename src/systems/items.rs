@@ -11,7 +11,7 @@ use crate::{
         physics::Physics,
     },
     events::items::{SpawnItemEvent, SpawnKind},
-    logic::items::store::ITEM_STORE,
+    game::items::store::ITEM_STORE,
 };
 
 pub fn spawn_item_event_handler(

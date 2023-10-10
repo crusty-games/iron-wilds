@@ -1,6 +1,6 @@
 mod components;
 mod events;
-mod logic;
+mod game;
 mod plugins;
 mod resources;
 mod systems;
