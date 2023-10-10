@@ -8,7 +8,7 @@ use rand::random;
 use crate::{
     components::{
         items::{GroundItem, GroundItemBundle},
-        physics::Physics,
+        physics::{Gravitate, GravitateToPlayer, Physics},
     },
     events::items::{SpawnItemEvent, SpawnKind},
     game::items::store::ITEM_STORE,
@@ -33,6 +33,7 @@ pub fn spawn_item_event_handler(
                             item_id,
                             stack_count,
                         },
+                        gravitate: (Gravitate::default(), GravitateToPlayer),
                         physics: Physics {
                             position,
                             velocity: Vec2 {

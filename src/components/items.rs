@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::{Fill, ShapeBundle};
 
-use super::physics::Physics;
+use super::physics::{Gravitate, GravitateToPlayer, Physics};
 
 // Item State Modifer
 #[derive(Component)]
@@ -14,6 +14,7 @@ pub struct GroundItem {
 #[derive(Bundle)]
 pub struct GroundItemBundle {
     pub ground_item: GroundItem,
+    pub gravitate: (Gravitate, GravitateToPlayer),
     pub physics: Physics,
     pub shape: ShapeBundle,
     pub fill: Fill,
