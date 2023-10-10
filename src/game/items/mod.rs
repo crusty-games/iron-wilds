@@ -5,7 +5,7 @@ pub mod store;
 pub struct Item {
     pub id: String,
     pub name: String,
-    pub max_stack: usize,
+    pub max_stack_count: usize,
 
     pub consumable: Option<Consumable>,
     pub placable: Option<Placable>,

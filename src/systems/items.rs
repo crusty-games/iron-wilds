@@ -9,6 +9,7 @@ use crate::{
     components::{
         items::{GroundItem, GroundItemBundle},
         physics::Physics,
+        storage::Storage,
     },
     events::items::{SpawnItemEvent, SpawnKind},
     game::items::store::ITEM_STORE,
@@ -60,6 +61,18 @@ pub fn spawn_item_event_handler(
 }
 
 pub fn spawn_items(mut spawn_item_event: EventWriter<SpawnItemEvent>) {
+    let mut test_storage = Storage::new(4);
+    println!("{:?}", test_storage.items);
+    test_storage.add_item("bread", 8);
+    println!("{:?}", test_storage.items);
+    test_storage.add_item("sword", 2);
+    println!("{:?}", test_storage.items);
+    println!("{:?}", test_storage.can_fit("bread", 6));
+    test_storage.add_item("bread", 6);
+    println!("{:?}", test_storage.items);
+    test_storage.add_item("cake", 4);
+    println!("{:?}", test_storage.items);
+
     for (id, _) in ITEM_STORE.items.iter() {
         spawn_item_event.send(SpawnItemEvent {
             kind: SpawnKind::GroundLoot {
