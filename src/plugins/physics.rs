@@ -10,7 +10,6 @@ impl Plugin for IronWildsPhysicsPlugin {
         app.init_resource::<PhysicsTimer>()
             .register_type::<Physics>()
             .add_systems(Update, tick_physics_timer)
-            .add_systems(Update, compute_physics)
-            .add_systems(Update, update_physics_shapes.after(compute_physics));
+            .add_systems(Update, (compute_physics, update_physics_shapes).chain());
     }
 }
