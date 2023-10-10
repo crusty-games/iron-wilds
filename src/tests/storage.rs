@@ -85,7 +85,6 @@ mod storage {
         assert!(matches!(test_storage.items.get(&3).unwrap(), None));
 
         test_storage.add_item(STONE, 6);
-        test_storage.add_item(BREAD, 4);
         let first_slot = test_storage.items.get(&0).unwrap().clone().unwrap();
         assert_eq!(first_slot.item_id, STONE);
         assert_eq!(first_slot.stack_count, 12);
@@ -101,5 +100,8 @@ mod storage {
         let fourth_slot = test_storage.items.get(&3).unwrap().clone().unwrap();
         assert_eq!(fourth_slot.item_id, STONE);
         assert_eq!(fourth_slot.stack_count, 2);
+
+        let try_full = test_storage.can_fit(BREAD, 4);
+        assert_eq!(try_full.len(), 0);
     }
 }
