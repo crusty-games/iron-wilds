@@ -5,11 +5,11 @@ mod load_weapons;
 use bevy::prelude::*;
 use std::collections::HashMap;
 
-use self::{config::ItemConfig, load_food::load_food_items, load_weapons::load_weapon_items};
+use self::{config::Item, load_food::load_food_items, load_weapons::load_weapon_items};
 
 #[derive(Resource)]
 pub struct ItemStore {
-    pub items: HashMap<String, ItemConfig>,
+    pub items: HashMap<String, Item>,
 }
 
 impl Default for ItemStore {
@@ -30,14 +30,14 @@ macro_rules! load_items {
 }
 
 impl ItemStore {
-    fn load_items() -> HashMap<String, ItemConfig> {
-        let mut items: HashMap<String, ItemConfig> = HashMap::new();
+    fn load_items() -> HashMap<String, Item> {
+        let mut items: HashMap<String, Item> = HashMap::new();
         load_items!(items, load_weapon_items);
         load_items!(items, load_food_items);
         items
     }
 
-    pub fn get<S: AsRef<str>>(&self, id: S) -> &ItemConfig {
+    pub fn get<S: AsRef<str>>(&self, id: S) -> &Item {
         let id_ref = id.as_ref();
         match self.items.get(id_ref) {
             Some(item) => item,

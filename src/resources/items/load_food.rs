@@ -1,9 +1,9 @@
-use super::config::{Consumable, Destructible, ItemConfig, Placable};
+use super::config::{Consumable, Destructible, Item, Placable};
 
-pub fn load_food_items() -> Vec<ItemConfig> {
-    let mut items: Vec<ItemConfig> = vec![];
+pub fn load_food_items() -> Vec<Item> {
+    let mut items: Vec<Item> = vec![];
 
-    items.push(ItemConfig {
+    items.push(Item {
         id: "bread".into(),
         name: "Bread".into(),
         consumable: Some(Consumable {
@@ -12,7 +12,7 @@ pub fn load_food_items() -> Vec<ItemConfig> {
         ..Default::default()
     });
 
-    items.push(ItemConfig {
+    items.push(Item {
         id: "cake".into(),
         name: "Cake".into(),
         consumable: Some(Consumable {

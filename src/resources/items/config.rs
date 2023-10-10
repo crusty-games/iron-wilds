@@ -1,5 +1,5 @@
 #[derive(Default)]
-pub struct ItemConfig {
+pub struct Item {
     pub id: String,
     pub name: String,
 
