@@ -2,7 +2,7 @@ use std::ops::Add;
 
 use bevy::{prelude::*, utils::HashMap};
 
-use crate::game::items::store::ITEM_STORE;
+use crate::game::items::store::{ItemStore, ITEM_STORE};
 
 #[derive(Clone, Debug)]
 pub struct StorageItem {
@@ -17,22 +17,32 @@ pub struct StorageItemCanFit {
 }
 
 #[derive(Component)]
-pub struct Storage {
+pub struct Storage<'a> {
     pub capacity: usize,
     pub items: HashMap<usize, Option<StorageItem>>,
+    item_store: &'a ItemStore,
 }
 
-impl Storage {
+impl<'a> Storage<'a> {
     pub fn new(capacity: usize) -> Self {
         let mut items = HashMap::new();
         for slot_index in 0..capacity {
             items.insert(slot_index, None);
         }
-        Self { capacity, items }
+        Self {
+            capacity,
+            items,
+            item_store: &ITEM_STORE,
+        }
+    }
+
+    #[cfg(test)]
+    pub fn set_item_store(&mut self, item_store: &'a ItemStore) {
+        self.item_store = item_store;
     }
 
     pub fn add_item<S: AsRef<str>>(&mut self, item_id: S, stack_count: usize) {
-        let item = ITEM_STORE.get(&item_id);
+        let item = self.item_store.get(&item_id);
         let can_fit = self.can_fit(item_id, stack_count);
         for fit in can_fit.iter() {
             match self.items.get_mut(&fit.slot_index).unwrap() {
@@ -71,7 +81,7 @@ impl Storage {
     }
 
     pub fn can_fit<S: AsRef<str>>(&self, item_id: S, stack_count: usize) -> Vec<StorageItemCanFit> {
-        let item = ITEM_STORE.get(&item_id);
+        let item = self.item_store.get(&item_id);
         let mut can_fit: Vec<StorageItemCanFit> = Vec::new();
         let mut stack_left = stack_count.clone();
         for slot_index in 0..self.capacity {

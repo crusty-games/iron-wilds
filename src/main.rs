@@ -4,6 +4,7 @@ mod game;
 mod plugins;
 mod resources;
 mod systems;
+mod tests;
 
 use plugins::inputs::IronWildsInputsPlugin;
 use plugins::items::IronWildsItemsPlugin;

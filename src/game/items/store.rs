@@ -10,15 +10,6 @@ pub struct ItemStore {
     pub items: HashMap<String, Item>,
 }
 
-macro_rules! load_items {
-    ($items:ident, $load:ident) => {
-        for item in $load().into_iter() {
-            println!("Loaded item {}:{}", item.id, item.name);
-            $items.insert(item.id.clone(), item);
-        }
-    };
-}
-
 impl ItemStore {
     pub fn new() -> Self {
         Self {
@@ -28,7 +19,9 @@ impl ItemStore {
 
     fn load_items() -> HashMap<String, Item> {
         let mut items: HashMap<String, Item> = HashMap::new();
-        load_items!(items, load_sample_items);
+        for item in load_sample_items().into_iter() {
+            items.insert(item.id.clone(), item);
+        }
         items
     }
 
