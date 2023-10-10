@@ -1,8 +1,6 @@
 use std::collections::HashMap;
 
-use crate::logic::items::load::load_sample_items;
-
-use super::config::Item;
+use super::{load::load_sample_items, Item};
 
 lazy_static! {
     pub static ref ITEM_STORE: ItemStore = ItemStore::new();

@@ -1,4 +1,4 @@
-use super::config::{Consumable, Destructible, Item, Placable, Weapon};
+use super::{Consumable, Destructible, Item, Placable, Weapon};
 
 pub fn load_sample_items() -> Vec<Item> {
     let mut items: Vec<Item> = vec![];
