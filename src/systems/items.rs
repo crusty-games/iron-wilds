@@ -14,14 +14,6 @@ use crate::{
     resources::items::ItemStore,
 };
 
-macro_rules! add_component {
-    ($target:expr, $from:expr) => {
-        if let Some(component) = $from.clone() {
-            $target.insert(component);
-        }
-    };
-}
-
 pub fn spawn_item_event_handler(
     mut commands: Commands,
     mut spawn_item_event: EventReader<SpawnItemEvent>,
@@ -30,14 +22,7 @@ pub fn spawn_item_event_handler(
     for event in spawn_item_event.iter() {
         let item = item_store.get(&event.item_id);
         let mut entity_commands = commands.spawn_empty();
-        entity_commands.insert(Name::from(item.name().clone()));
-        add_component!(entity_commands, item.consumable);
-        add_component!(entity_commands, item.stackable);
-        add_component!(entity_commands, item.placable);
-        add_component!(entity_commands, item.destructible);
-        add_component!(entity_commands, item.harvestable);
-        add_component!(entity_commands, item.tool);
-        add_component!(entity_commands, item.weapon);
+        entity_commands.insert(Name::from(item.name.clone()));
 
         match event.spawn_as {
             SpawnItemAs::GroundLoot { position } => {
