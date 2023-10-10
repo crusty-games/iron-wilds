@@ -5,41 +5,40 @@ use crate::{
         items::GroundItem,
         physics::Physics,
         player::{Player, PrimaryPlayer},
+        storage::StorageItem,
     },
-    resources::inventory::PrimaryPlayerInventory,
+    game::items::store::WithItemStore,
+    resources::inventory::Inventory,
 };
 
 pub fn pick_up_ground_items(
     mut commands: Commands,
-    primary_player_query: Query<(&Player, &Physics), With<PrimaryPlayer>>,
+    player_query: Query<(&Player, &Physics), With<PrimaryPlayer>>,
     item_query: Query<(Entity, &Physics, &GroundItem)>,
-    mut player_inventory: ResMut<PrimaryPlayerInventory<'static>>,
+    mut inventory: ResMut<Inventory>,
 ) {
-    for (player, primary_player_physics) in primary_player_query.iter() {
+    for (player, player_physics) in player_query.iter() {
         for (item_entity, item_physics, ground_item) in item_query.iter() {
-            if item_physics
-                .position
-                .distance(primary_player_physics.position)
-                < player.item_pick_up_radius
+            let storage_item = WithItemStore::global(StorageItem {
+                item_id: ground_item.item_id.clone(),
+                stack_count: ground_item.stack_count,
+            });
+            if item_physics.position.distance(player_physics.position) < player.item_pick_up_radius
             {
-                let can_fit = player_inventory
-                    .storage
-                    .can_fit(&ground_item.item_id, ground_item.stack_count);
-                let pick_up_item = can_fit.len() > 0;
-                if pick_up_item {
-                    player_inventory
-                        .storage
-                        .add_item(&ground_item.item_id, ground_item.stack_count);
+                let target_slots = inventory.storage.get_target_slots(&storage_item);
+                let can_pick_up = target_slots.len() > 0;
+                if can_pick_up {
+                    inventory.storage.add_item(&storage_item);
                     commands.entity(item_entity).despawn();
                 }
-                let message = if pick_up_item {
+                let pick_up_message = if can_pick_up {
                     format!("Picked up {}.", ground_item.item_id)
                 } else {
                     format!("Can't pick up {}. Inventory full.", ground_item.item_id)
                 };
-                println!("Player Inventory: {}", message);
-                for i in 0..player_inventory.storage.capacity {
-                    let slot = player_inventory.storage.items.get(&i).unwrap();
+                println!("Player Inventory: {}", pick_up_message);
+                for i in 0..inventory.storage.capacity {
+                    let slot = inventory.storage.items.get(&i).unwrap();
                     let text = match slot {
                         Some(item) => format!("{}({})", item.item_id, item.stack_count),
                         None => "Empty".into(),

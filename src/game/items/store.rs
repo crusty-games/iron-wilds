@@ -29,7 +29,29 @@ impl ItemStore {
         let id_ref = id.as_ref();
         match self.items.get(id_ref) {
             Some(item) => item,
-            None => panic!("Item by ID \"${id_ref}\" not found"),
+            None => panic!("Item by ID \"{id_ref}\" not found"),
+        }
+    }
+}
+
+pub struct WithItemStore<'a, T> {
+    pub item_store: &'a ItemStore,
+    pub payload: T,
+}
+
+impl<'a, T> WithItemStore<'a, T> {
+    pub fn global(payload: T) -> WithItemStore<'a, T> {
+        Self {
+            item_store: &ITEM_STORE,
+            payload,
+        }
+    }
+
+    #[cfg(test)]
+    pub fn injected(item_store: &'a ItemStore, payload: T) -> Self {
+        Self {
+            item_store,
+            payload,
         }
     }
 }

@@ -1,13 +1,11 @@
 use bevy::prelude::*;
 
-use crate::{
-    resources::inventory::PrimaryPlayerInventory, systems::inventory::pick_up_ground_items,
-};
+use crate::{resources::inventory::Inventory, systems::inventory::pick_up_ground_items};
 
 pub struct IronWildsInventoryPlugin;
 impl Plugin for IronWildsInventoryPlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<PrimaryPlayerInventory>()
+        app.init_resource::<Inventory>()
             .add_systems(Update, pick_up_ground_items);
     }
 }

@@ -3,8 +3,11 @@ mod storage {
     use std::collections::HashMap;
 
     use crate::{
-        components::storage::Storage,
-        game::items::{store::ItemStore, Item},
+        components::storage::{Storage, StorageItem},
+        game::items::{
+            store::{ItemStore, WithItemStore},
+            Item,
+        },
     };
 
     const BREAD: &str = "bread";
@@ -54,14 +57,19 @@ mod storage {
     fn test_add_and_fit_items() {
         let mut test_storage = Storage::new(CAPACITY);
         let item_store = make_store();
-        test_storage.set_item_store(&item_store);
 
         assert_eq!(test_storage.items.len(), CAPACITY);
         for slot_index in 0..CAPACITY {
             assert!(matches!(test_storage.items.get(&slot_index).unwrap(), None));
         }
 
-        test_storage.add_item(STONE, 8);
+        test_storage.add_item(&WithItemStore::injected(
+            &item_store,
+            StorageItem {
+                item_id: STONE.into(),
+                stack_count: 8,
+            },
+        ));
         let first_slot = test_storage.items.get(&0).unwrap().clone().unwrap();
         assert_eq!(first_slot.item_id, STONE);
         assert_eq!(first_slot.stack_count, 8);
@@ -69,7 +77,13 @@ mod storage {
             assert!(matches!(test_storage.items.get(&slot_index).unwrap(), None));
         }
 
-        test_storage.add_item(SWORD, 2);
+        test_storage.add_item(&WithItemStore::injected(
+            &item_store,
+            StorageItem {
+                item_id: SWORD.into(),
+                stack_count: 2,
+            },
+        ));
         let first_slot = test_storage.items.get(&0).unwrap().clone().unwrap();
         assert_eq!(first_slot.item_id, STONE);
         assert_eq!(first_slot.stack_count, 8);
@@ -84,7 +98,13 @@ mod storage {
 
         assert!(matches!(test_storage.items.get(&3).unwrap(), None));
 
-        test_storage.add_item(STONE, 6);
+        test_storage.add_item(&WithItemStore::injected(
+            &item_store,
+            StorageItem {
+                item_id: STONE.into(),
+                stack_count: 6,
+            },
+        ));
         let first_slot = test_storage.items.get(&0).unwrap().clone().unwrap();
         assert_eq!(first_slot.item_id, STONE);
         assert_eq!(first_slot.stack_count, 12);
@@ -101,7 +121,13 @@ mod storage {
         assert_eq!(fourth_slot.item_id, STONE);
         assert_eq!(fourth_slot.stack_count, 2);
 
-        let try_full = test_storage.can_fit(BREAD, 4);
+        let try_full = test_storage.get_target_slots(&WithItemStore::injected(
+            &item_store,
+            StorageItem {
+                item_id: BREAD.into(),
+                stack_count: 4,
+            },
+        ));
         assert_eq!(try_full.len(), 0);
     }
 }
