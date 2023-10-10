@@ -16,7 +16,7 @@ pub fn load_sample_items() -> Vec<Item> {
     items.push(Item {
         id: "cake".into(),
         name: "Cake".into(),
-        max_stack_count: 1,
+        max_stack_count: 4,
         consumable: Some(Consumable {
             effect_healing: 50.0,
         }),

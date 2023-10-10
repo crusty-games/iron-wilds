@@ -3,7 +3,7 @@ use bevy_prototype_lyon::{
     prelude::{Fill, GeometryBuilder, ShapeBundle},
     shapes::Circle,
 };
-use rand::random;
+use rand::{random, thread_rng, Rng};
 
 use crate::{
     components::{
@@ -62,20 +62,17 @@ pub fn spawn_item_event_handler(
 
 pub fn spawn_items(mut spawn_item_event: EventWriter<SpawnItemEvent>) {
     for (id, _) in ITEM_STORE.items.iter() {
-        spawn_item_event.send(SpawnItemEvent {
-            kind: SpawnKind::GroundLoot {
-                item_id: id.clone(),
-                stack_count: 1,
-                position: Vec2::ZERO,
-            },
-        })
+        for _ in 0..10 {
+            spawn_item_event.send(SpawnItemEvent {
+                kind: SpawnKind::GroundLoot {
+                    item_id: id.clone(),
+                    stack_count: thread_rng().gen_range(1..2),
+                    position: Vec2 {
+                        x: (random::<f32>() - 0.5) * 500.0,
+                        y: (random::<f32>() - 0.5) * 500.0,
+                    },
+                },
+            })
+        }
     }
-
-    spawn_item_event.send(SpawnItemEvent {
-        kind: SpawnKind::GroundLoot {
-            item_id: "bread".into(),
-            stack_count: 1,
-            position: Vec2::ZERO,
-        },
-    })
 }

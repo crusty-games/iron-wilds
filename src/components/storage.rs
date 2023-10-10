@@ -96,19 +96,23 @@ impl<'a> Storage<'a> {
             {
                 if &item.id == storage_item_id {
                     let stack_taken = stack_left.min(&item.max_stack_count - storage_stack_count);
+                    if stack_taken > 0 {
+                        stack_left -= stack_taken;
+                        can_fit.push(StorageItemCanFit {
+                            stack_count: stack_taken,
+                            slot_index: slot_index.clone(),
+                        })
+                    }
+                }
+            } else {
+                let stack_taken = stack_left.min(item.max_stack_count);
+                if stack_taken > 0 {
                     stack_left -= stack_taken;
                     can_fit.push(StorageItemCanFit {
                         stack_count: stack_taken,
                         slot_index: slot_index.clone(),
                     })
                 }
-            } else {
-                let stack_taken = stack_left.min(item.max_stack_count);
-                stack_left -= stack_taken;
-                can_fit.push(StorageItemCanFit {
-                    stack_count: stack_taken,
-                    slot_index: slot_index.clone(),
-                })
             }
         }
         can_fit
