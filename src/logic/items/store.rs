@@ -1,23 +1,15 @@
-pub mod config;
-mod load_food;
-mod load_weapons;
-
-use bevy::prelude::*;
 use std::collections::HashMap;
 
-use self::{config::Item, load_food::load_food_items, load_weapons::load_weapon_items};
+use crate::logic::items::load::load_sample_items;
 
-#[derive(Resource)]
-pub struct ItemStore {
-    pub items: HashMap<String, Item>,
+use super::config::Item;
+
+lazy_static! {
+    pub static ref ITEM_STORE: ItemStore = ItemStore::new();
 }
 
-impl Default for ItemStore {
-    fn default() -> Self {
-        Self {
-            items: Self::load_items(),
-        }
-    }
+pub struct ItemStore {
+    pub items: HashMap<String, Item>,
 }
 
 macro_rules! load_items {
@@ -30,10 +22,15 @@ macro_rules! load_items {
 }
 
 impl ItemStore {
+    pub fn new() -> Self {
+        Self {
+            items: Self::load_items(),
+        }
+    }
+
     fn load_items() -> HashMap<String, Item> {
         let mut items: HashMap<String, Item> = HashMap::new();
-        load_items!(items, load_weapon_items);
-        load_items!(items, load_food_items);
+        load_items!(items, load_sample_items);
         items
     }
 

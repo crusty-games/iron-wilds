@@ -2,9 +2,9 @@
 pub struct Item {
     pub id: String,
     pub name: String,
+    pub max_stack: usize,
 
     pub consumable: Option<Consumable>,
-    pub stackable: Option<Stackable>,
     pub placable: Option<Placable>,
     pub destructible: Option<Destructible>,
     pub harvestable: Option<Harvestable>,
@@ -27,8 +27,3 @@ pub struct Weapon {
 // Block Related
 pub struct Destructible;
 pub struct Harvestable;
-
-// General item data
-pub struct Stackable {
-    pub max_stack: usize,
-}

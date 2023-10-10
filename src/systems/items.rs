@@ -11,13 +11,12 @@ use crate::{
         physics::Physics,
     },
     events::items::{SpawnItemEvent, SpawnKind},
-    resources::items::ItemStore,
+    logic::items::store::ITEM_STORE,
 };
 
 pub fn spawn_item_event_handler(
     mut commands: Commands,
     mut spawn_item_event: EventReader<SpawnItemEvent>,
-    item_store: Res<ItemStore>,
 ) {
     for event in spawn_item_event.iter() {
         match event.kind.clone() {
@@ -26,7 +25,7 @@ pub fn spawn_item_event_handler(
                 stack_count,
                 position,
             } => {
-                let item = item_store.get(&item_id);
+                let item = ITEM_STORE.get(&item_id);
                 commands.spawn((
                     Name::from(item.name.clone()),
                     GroundItemBundle {
@@ -60,8 +59,8 @@ pub fn spawn_item_event_handler(
     }
 }
 
-pub fn spawn_items(mut spawn_item_event: EventWriter<SpawnItemEvent>, item_store: Res<ItemStore>) {
-    for (id, _) in item_store.items.iter() {
+pub fn spawn_items(mut spawn_item_event: EventWriter<SpawnItemEvent>) {
+    for (id, _) in ITEM_STORE.items.iter() {
         spawn_item_event.send(SpawnItemEvent {
             kind: SpawnKind::GroundLoot {
                 item_id: id.clone(),
