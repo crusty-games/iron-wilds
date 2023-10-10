@@ -9,6 +9,8 @@ pub struct ItemConfig {
     pub harvestable: Option<Harvestable>,
     pub tool: Option<Tool>,
     pub weapon: Option<Weapon>,
+
+    pub assets: Option<AssetConfig>,
 }
 
 impl Default for ItemConfig {
@@ -23,8 +25,14 @@ impl Default for ItemConfig {
             harvestable: None,
             tool: None,
             weapon: None,
+            assets: None,
         }
     }
+}
+
+// Asset Related
+pub struct AssetConfig {
+    pub ground_item_path: String,
 }
 
 // Food Related

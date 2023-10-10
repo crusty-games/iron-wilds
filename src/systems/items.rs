@@ -5,12 +5,14 @@ use rand::{random, thread_rng, Rng};
 use crate::components::items::{GroundItem, GroundItemBundle};
 use crate::components::physics::{Gravitate, GravitateToPlayer, Physics};
 use crate::events::items::{SpawnItemEvent, SpawnKind};
+use crate::resources::items::config::AssetConfig;
 use crate::resources::items::ItemStore;
 
 pub fn spawn_item_event_handler(
     mut commands: Commands,
     mut spawn_event: EventReader<SpawnItemEvent>,
     item_store: Res<ItemStore>,
+    asset_server: Res<AssetServer>,
 ) {
     for event in spawn_event.iter() {
         match event.kind.clone() {
@@ -20,7 +22,7 @@ pub fn spawn_item_event_handler(
                 position,
             } => {
                 let item = item_store.get(&item_id);
-                commands.spawn((
+                let mut entity_commands = commands.spawn((
                     Name::from(item.name.clone()),
                     GroundItemBundle {
                         ground_item: GroundItem {
@@ -38,7 +40,23 @@ pub fn spawn_item_event_handler(
                                 * 10.0,
                             friction: 0.8,
                         },
-                        shape: ShapeBundle {
+                    },
+                ));
+
+                if let Some(AssetConfig { ground_item_path }) = &item.assets {
+                    let scale = 2.0;
+                    entity_commands.insert(SpriteBundle {
+                        texture: asset_server.load(ground_item_path),
+                        transform: Transform::from_scale(Vec3 {
+                            x: scale,
+                            y: scale,
+                            z: scale,
+                        }),
+                        ..default()
+                    });
+                } else {
+                    entity_commands.insert((
+                        ShapeBundle {
                             path: GeometryBuilder::build_as(&Circle {
                                 radius: 5.0,
                                 ..default()
@@ -46,9 +64,9 @@ pub fn spawn_item_event_handler(
                             transform: Transform::from_xyz(0.0, 0.0, 1.0),
                             ..default()
                         },
-                        fill: Fill::color(Color::RED),
-                    },
-                ));
+                        Fill::color(Color::RED),
+                    ));
+                }
             }
         }
     }
