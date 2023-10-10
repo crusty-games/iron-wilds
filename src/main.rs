@@ -14,9 +14,6 @@ use plugins::setup::IronWildsSetupPlugin;
 
 use bevy::prelude::*;
 
-#[macro_use]
-extern crate lazy_static;
-
 fn main() {
     App::new()
         .add_plugins(IronWildsSetupPlugin)

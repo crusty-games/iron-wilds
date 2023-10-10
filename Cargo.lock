@@ -2125,7 +2125,6 @@ dependencies = [
  "bevy",
  "bevy-inspector-egui",
  "bevy_prototype_lyon",
- "lazy_static",
  "rand",
 ]
 

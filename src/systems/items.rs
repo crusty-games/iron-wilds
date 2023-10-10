@@ -5,12 +5,12 @@ use rand::{random, thread_rng, Rng};
 use crate::components::items::{GroundItem, GroundItemBundle};
 use crate::components::physics::{Gravitate, GravitateToPlayer, Physics};
 use crate::events::items::{SpawnItemEvent, SpawnKind};
-use crate::resources::items::Items;
+use crate::resources::items::ItemStore;
 
 pub fn spawn_item_event_handler(
     mut commands: Commands,
     mut spawn_event: EventReader<SpawnItemEvent>,
-    items: Res<Items>,
+    item_store: Res<ItemStore>,
 ) {
     for event in spawn_event.iter() {
         match event.kind.clone() {
@@ -19,7 +19,7 @@ pub fn spawn_item_event_handler(
                 stack_count,
                 position,
             } => {
-                let item = items.store.get(&item_id);
+                let item = item_store.get(&item_id);
                 commands.spawn((
                     Name::from(item.name.clone()),
                     GroundItemBundle {
@@ -54,8 +54,8 @@ pub fn spawn_item_event_handler(
     }
 }
 
-pub fn spawn_items(mut spawn_event: EventWriter<SpawnItemEvent>, items: Res<Items>) {
-    for (id, _) in items.store.items.iter() {
+pub fn spawn_items(mut spawn_event: EventWriter<SpawnItemEvent>, item_store: Res<ItemStore>) {
+    for (id, _) in item_store.items.iter() {
         for _ in 0..20 {
             spawn_event.send(SpawnItemEvent {
                 kind: SpawnKind::GroundLoot {

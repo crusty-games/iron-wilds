@@ -1,8 +1,8 @@
-use std::ops::Add;
+use std::{collections::HashMap, ops::Add};
 
-use bevy::{prelude::*, utils::HashMap};
+use bevy::prelude::*;
 
-use crate::resources::items::store::ItemStore;
+use crate::resources::items::ItemStore;
 
 #[derive(Clone, Debug)]
 pub struct StorageItem {

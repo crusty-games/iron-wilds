@@ -3,14 +3,15 @@ use bevy::prelude::*;
 use crate::components::items::GroundItem;
 use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::{physics::Physics, storage::StorageItem};
-use crate::resources::{inventory::Inventory, items::Items};
+use crate::resources::inventory::Inventory;
+use crate::resources::items::ItemStore;
 
 pub fn pick_up_ground_items(
     mut commands: Commands,
     player_query: Query<(&Player, &Physics), With<PrimaryPlayer>>,
     item_query: Query<(Entity, &Physics, &GroundItem)>,
     mut inventory: ResMut<Inventory>,
-    items: Res<Items>,
+    item_store: Res<ItemStore>,
 ) {
     for (player, player_physics) in player_query.iter() {
         for (item_entity, item_physics, ground_item) in item_query.iter() {
@@ -22,10 +23,10 @@ pub fn pick_up_ground_items(
             {
                 let target_slots = inventory
                     .storage
-                    .get_target_slots(items.store, &storage_item);
+                    .get_target_slots(&item_store, &storage_item);
                 let can_pick_up = target_slots.len() > 0;
                 if can_pick_up {
-                    inventory.storage.add_item(items.store, &storage_item);
+                    inventory.storage.add_item(&item_store, &storage_item);
                     commands.entity(item_entity).despawn();
                 }
                 let pick_up_message = if can_pick_up {
