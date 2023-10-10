@@ -1,16 +1,16 @@
 use bevy::prelude::*;
+use bevy_inspector_egui::{prelude::ReflectInspectorOptions, InspectorOptions};
 use bevy_prototype_lyon::prelude::{Fill, ShapeBundle};
 
 use super::physics::{Gravitate, GravitateToPlayer, Physics};
 
-// Item State Modifer
-#[derive(Component)]
+#[derive(Component, Reflect, InspectorOptions)]
+#[reflect(InspectorOptions)]
 pub struct GroundItem {
     pub item_id: String,
     pub stack_count: usize,
 }
 
-// Bundles
 #[derive(Bundle)]
 pub struct GroundItemBundle {
     pub ground_item: GroundItem,

@@ -1,5 +1,6 @@
-use crate::systems::player::spawn_player;
 use bevy::prelude::*;
+
+use crate::systems::player::spawn_player;
 
 pub struct IronWildsPlayerPlugin;
 impl Plugin for IronWildsPlayerPlugin {

@@ -1,6 +1,7 @@
+use bevy::prelude::*;
+
 use crate::systems::inputs::move_player;
 use crate::systems::physics::compute_physics;
-use bevy::prelude::*;
 
 pub struct IronWildsInputsPlugin;
 impl Plugin for IronWildsInputsPlugin {

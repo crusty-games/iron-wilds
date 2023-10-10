@@ -3,9 +3,8 @@ use bevy::prelude::{App, IntoSystemConfigs, Plugin, Update};
 use crate::components::physics::{GravitateToPlayer, Physics};
 use crate::components::player::Player;
 use crate::resources::physics::PhysicsTimer;
-use crate::systems::physics::{
-    compute_physics, gravitate, tick_physics_timer, update_physics_shapes,
-};
+use crate::systems::physics::tick_physics_timer;
+use crate::systems::physics::{compute_physics, gravitate, update_physics_shapes};
 
 pub struct IronWildsPhysicsPlugin;
 impl Plugin for IronWildsPhysicsPlugin {

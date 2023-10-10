@@ -1,9 +1,8 @@
 pub mod config;
 pub mod load;
 
-use std::collections::HashMap;
-
 use bevy::prelude::*;
+use std::collections::HashMap;
 
 use self::{config::ItemConfig, load::load_sample_items};
 

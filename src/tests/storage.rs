@@ -117,13 +117,14 @@ mod storage {
         assert_eq!(fourth_slot.item_id, STONE);
         assert_eq!(fourth_slot.stack_count, 2);
 
-        let try_full = test_storage.get_target_slots(
+        let transaction = test_storage.get_target_slots(
             &item_store,
             &StorageItem {
                 item_id: BREAD.into(),
                 stack_count: 4,
             },
         );
-        assert_eq!(try_full.len(), 0);
+        assert_eq!(transaction.target_slots.len(), 0);
+        assert_eq!(transaction.stack_left, 4);
     }
 }

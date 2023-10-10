@@ -28,7 +28,6 @@ pub fn load_sample_items() -> Vec<ItemConfig> {
     items.push(ItemConfig {
         id: "sword".into(),
         name: "Sword".into(),
-        max_stack_count: 1,
         weapon: Some(Weapon { base_damage: 20.0 }),
         ..Default::default()
     });

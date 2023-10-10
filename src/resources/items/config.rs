@@ -1,4 +1,3 @@
-#[derive(Default)]
 pub struct ItemConfig {
     pub id: String,
     pub name: String,
@@ -10,6 +9,22 @@ pub struct ItemConfig {
     pub harvestable: Option<Harvestable>,
     pub tool: Option<Tool>,
     pub weapon: Option<Weapon>,
+}
+
+impl Default for ItemConfig {
+    fn default() -> Self {
+        Self {
+            id: Default::default(),
+            name: Default::default(),
+            max_stack_count: 1,
+            consumable: None,
+            placable: None,
+            destructible: None,
+            harvestable: None,
+            tool: None,
+            weapon: None,
+        }
+    }
 }
 
 // Food Related

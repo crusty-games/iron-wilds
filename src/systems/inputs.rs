@@ -1,7 +1,8 @@
+use bevy::prelude::*;
+
 use crate::components::physics::Physics;
 use crate::components::player::Player;
 use crate::resources::physics::PhysicsTimer;
-use bevy::prelude::*;
 
 pub fn move_player(
     mut player_query: Query<(&Player, &mut Physics)>,

@@ -1,25 +1,29 @@
+use bevy::prelude::*;
 use std::{collections::HashMap, ops::Add};
 
-use bevy::prelude::*;
-
 use crate::resources::items::ItemStore;
-
-#[derive(Clone, Debug)]
-pub struct StorageItem {
-    pub item_id: String,
-    pub stack_count: usize,
-}
-
-#[derive(Debug)]
-pub struct TargetSlot {
-    pub stack_count: usize,
-    pub slot_index: usize,
-}
 
 #[derive(Component)]
 pub struct Storage {
     pub capacity: usize,
     pub items: HashMap<usize, Option<StorageItem>>,
+}
+
+#[derive(Clone)]
+pub struct StorageItem {
+    pub item_id: String,
+    pub stack_count: usize,
+}
+
+pub struct TargetSlot {
+    pub stack_count: usize,
+    pub slot_index: usize,
+}
+
+pub struct AddItem {
+    pub item_id: String,
+    pub target_slots: Vec<TargetSlot>,
+    pub stack_left: usize,
 }
 
 impl Storage {
@@ -31,11 +35,19 @@ impl Storage {
         Self { capacity, items }
     }
 
-    pub fn add_item(&mut self, item_store: &ItemStore, storage_item: &StorageItem) {
-        let StorageItem { item_id, .. } = storage_item;
+    pub fn add_item(&mut self, item_store: &ItemStore, storage_item: &StorageItem) -> AddItem {
+        let transaction = self.get_target_slots(item_store, storage_item);
+        self.commit_add(item_store, &transaction);
+        transaction
+    }
 
+    pub fn commit_add(&mut self, item_store: &ItemStore, transaction: &AddItem) {
+        let AddItem {
+            item_id,
+            target_slots,
+            ..
+        } = transaction;
         let item = item_store.get(&item_id);
-        let target_slots = self.get_target_slots(item_store, storage_item);
         for fit in target_slots.iter() {
             match self.items.get_mut(&fit.slot_index).unwrap() {
                 Some(StorageItem {
@@ -72,11 +84,7 @@ impl Storage {
         }
     }
 
-    pub fn get_target_slots(
-        &self,
-        item_store: &ItemStore,
-        storage_item: &StorageItem,
-    ) -> Vec<TargetSlot> {
+    pub fn get_target_slots(&self, item_store: &ItemStore, storage_item: &StorageItem) -> AddItem {
         let StorageItem {
             item_id,
             stack_count,
@@ -116,6 +124,10 @@ impl Storage {
                 }
             }
         }
-        target_slots
+        AddItem {
+            item_id: item_id.clone(),
+            target_slots,
+            stack_left,
+        }
     }
 }
