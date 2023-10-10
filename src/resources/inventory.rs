@@ -1,8 +1,10 @@
 use bevy::prelude::*;
+use bevy_inspector_egui::{prelude::ReflectInspectorOptions, InspectorOptions};
 
 use crate::components::storage::Storage;
 
-#[derive(Resource)]
+#[derive(Reflect, Resource, InspectorOptions)]
+#[reflect(Resource, InspectorOptions)]
 pub struct Inventory {
     pub storage: Storage,
 }

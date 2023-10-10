@@ -1,15 +1,18 @@
 use bevy::prelude::*;
+use bevy_inspector_egui::{prelude::ReflectInspectorOptions, InspectorOptions};
 use std::{collections::HashMap, ops::Add};
 
 use crate::resources::items::ItemStore;
 
-#[derive(Component)]
+#[derive(Reflect, Component, InspectorOptions)]
+#[reflect(InspectorOptions)]
 pub struct Storage {
     pub capacity: usize,
     pub items: HashMap<usize, Option<StorageItem>>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Reflect, InspectorOptions)]
+#[reflect(InspectorOptions)]
 pub struct StorageItem {
     pub item_id: String,
     pub stack_count: usize,

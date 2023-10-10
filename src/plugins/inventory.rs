@@ -6,6 +6,7 @@ pub struct IronWildsInventoryPlugin;
 impl Plugin for IronWildsInventoryPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<Inventory>()
+            .register_type::<Inventory>()
             .add_systems(Update, pick_up_ground_items);
     }
 }
