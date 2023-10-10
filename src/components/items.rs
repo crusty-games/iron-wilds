@@ -8,6 +8,7 @@ use super::physics::{Gravitate, GravitateToPlayer, Physics};
 pub struct GroundItem {
     pub item_id: String,
     pub stack_count: usize,
+    pub pick_up_timeout: Timer,
 }
 
 #[derive(Bundle)]

@@ -15,6 +15,9 @@ pub fn pick_up_ground_items(
 ) {
     for (player, player_physics) in player_query.iter() {
         for (item_entity, item_physics, mut ground_item) in item_query.iter_mut() {
+            if !ground_item.pick_up_timeout.finished() {
+                continue;
+            }
             let storage_item = StorageItem {
                 item_id: ground_item.item_id.clone(),
                 stack_count: ground_item.stack_count,

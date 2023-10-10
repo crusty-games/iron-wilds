@@ -28,6 +28,7 @@ pub fn spawn_item_event_handler(
                         ground_item: GroundItem {
                             item_id,
                             stack_count,
+                            pick_up_timeout: Timer::from_seconds(2.0, TimerMode::Once),
                         },
                         gravitate: (Gravitate::default(), GravitateToPlayer),
                         physics: Physics {
@@ -86,5 +87,11 @@ pub fn spawn_items(mut spawn_event: EventWriter<SpawnItemEvent>, item_store: Res
                 },
             })
         }
+    }
+}
+
+pub fn tick_item_timers(mut item_query: Query<&mut GroundItem>, time: Res<Time>) {
+    for mut item in item_query.iter_mut() {
+        item.pick_up_timeout.tick(time.delta());
     }
 }
