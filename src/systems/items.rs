@@ -43,12 +43,12 @@ pub fn spawn_item_event_handler(
                         },
                     },
                 ));
-
+                let transform = Transform::from_xyz(position.x, position.y, 1.0);
                 if let Some(AssetConfig { ground_item_path }) = &item.assets {
                     let scale = 2.0;
                     entity_commands.insert(SpriteBundle {
                         texture: asset_server.load(ground_item_path),
-                        transform: Transform::from_scale(Vec3 {
+                        transform: transform.with_scale(Vec3 {
                             x: scale,
                             y: scale,
                             z: scale,
@@ -62,7 +62,7 @@ pub fn spawn_item_event_handler(
                                 radius: 5.0,
                                 ..default()
                             }),
-                            transform: Transform::from_xyz(0.0, 0.0, 1.0),
+                            transform,
                             ..default()
                         },
                         Fill::color(Color::RED),
