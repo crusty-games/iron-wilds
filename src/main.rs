@@ -1,4 +1,5 @@
 mod components;
+mod data;
 mod events;
 mod plugins;
 mod resources;

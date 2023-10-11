@@ -1,0 +1,4 @@
+ingredient,output
+"crab:1,anvil:1",sword:1
+"anvil:1,sword:1",sword:2
+"sword:1,crab:4",crab:8
