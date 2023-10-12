@@ -1,4 +1,5 @@
-ingredient,output
-"crab:1,anvil:1",sword:1
-"anvil:1,sword:1",sword:2
-"sword:1,crab:4",crab:8
+type,output,ingredients
+crafting_basic,crab:2,"crab:1,sword:1"
+crafting_workbench,crab:2,"crab:1,anvil:1"
+cooking_basic,crab:2,"crab:1,anvil:2"
+cooking_kitchen,crab:2,"crab:1,anvil:3"

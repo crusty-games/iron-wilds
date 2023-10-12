@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 
-use crate::components::storage::{Storage, StorageItem};
-use crate::data::load_recipe_crafting::load_sample_recipes;
+use crate::{
+    components::storage::{Storage, StorageItem},
+    data::recipes::{get_cooking_basic_recipes, get_crafting_basic_recipes},
+};
 
 #[derive(Resource)]
 pub struct Recipes {
@@ -12,8 +14,8 @@ pub struct Recipes {
 impl Default for Recipes {
     fn default() -> Self {
         Self {
-            crafting: load_sample_recipes(),
-            cooking: load_sample_recipes(),
+            crafting: get_crafting_basic_recipes(),
+            cooking: get_cooking_basic_recipes(),
         }
     }
 }
