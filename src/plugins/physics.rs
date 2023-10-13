@@ -1,8 +1,10 @@
-use bevy::prelude::{App, Plugin, Update};
+use bevy::prelude::{App, IntoSystemConfigs, Plugin, Update};
 
-use crate::components::physics::Physics;
+use crate::components::physics::{GravitateToPlayer, Physics};
+use crate::components::player::Player;
 use crate::resources::physics::PhysicsTimer;
-use crate::systems::physics::{compute_physics, tick_physics_timer};
+use crate::systems::physics::tick_physics_timer;
+use crate::systems::physics::{compute_physics, gravitate, update_physics_shapes};
 
 pub struct IronWildsPhysicsPlugin;
 impl Plugin for IronWildsPhysicsPlugin {
@@ -10,6 +12,14 @@ impl Plugin for IronWildsPhysicsPlugin {
         app.init_resource::<PhysicsTimer>()
             .register_type::<Physics>()
             .add_systems(Update, tick_physics_timer)
-            .add_systems(Update, compute_physics);
+            .add_systems(
+                Update,
+                (
+                    gravitate::<GravitateToPlayer, Player>,
+                    compute_physics,
+                    update_physics_shapes,
+                )
+                    .chain(),
+            );
     }
 }
