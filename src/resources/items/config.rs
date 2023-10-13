@@ -1,3 +1,5 @@
+use std::ops::Range;
+
 pub struct ItemConfig {
     pub id: String,
     pub name: String,
@@ -29,24 +31,25 @@ impl Default for ItemConfig {
         }
     }
 }
-
-// Asset Related
 pub struct AssetConfig {
     pub ground_item_path: String,
+    // pub tile_path: String,
 }
-
-// Food Related
-pub struct Placable;
 pub struct Consumable {
     pub effect_healing: f32,
 }
 
-// Tool/Weapon Related
 pub struct Tool;
 pub struct Weapon {
     pub base_damage: f32,
 }
-
-// Block Related
-pub struct Destructible;
+pub struct Placable {}
+pub struct BlockItemDrop {
+    pub item_id: String,
+    pub stack_count: Range<usize>,
+    pub chance: f32,
+}
+pub struct Destructible {
+    pub drops: Vec<BlockItemDrop>,
+}
 pub struct Harvestable;

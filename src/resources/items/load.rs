@@ -1,4 +1,6 @@
-use super::config::{AssetConfig, Consumable, Destructible, ItemConfig, Placable, Weapon};
+use super::config::{
+    AssetConfig, BlockItemDrop, Consumable, Destructible, ItemConfig, Placable, Weapon,
+};
 
 pub fn load_sample_items() -> Vec<ItemConfig> {
     let mut items: Vec<ItemConfig> = vec![];
@@ -20,8 +22,14 @@ pub fn load_sample_items() -> Vec<ItemConfig> {
         id: "anvil".into(),
         name: "Anvil".into(),
         max_stack_count: 4,
-        placable: Some(Placable),
-        destructible: Some(Destructible),
+        placable: Some(Placable {}),
+        destructible: Some(Destructible {
+            drops: vec![BlockItemDrop {
+                item_id: "anvil".into(),
+                stack_count: 1..1,
+                chance: 1.0,
+            }],
+        }),
         assets: Some(AssetConfig {
             ground_item_path: "test/anvil.png".into(),
         }),
