@@ -5,12 +5,12 @@ pub struct ItemConfig {
     pub name: String,
     pub max_stack_count: usize,
 
-    pub consumable: Option<Consumable>,
-    pub placable: Option<Placable>,
-    pub destructible: Option<Destructible>,
-    pub harvestable: Option<Harvestable>,
-    pub tool: Option<Tool>,
-    pub weapon: Option<Weapon>,
+    pub consumable: Option<ConsumableConfig>,
+    pub placable: Option<PlacableConfig>,
+    pub destructible: Option<DestructibleConfig>,
+    pub harvestable: Option<HarvestableConfig>,
+    pub tool: Option<ToolConfig>,
+    pub weapon: Option<WeaponConfig>,
 
     pub assets: Option<AssetConfig>,
 }
@@ -35,21 +35,23 @@ pub struct AssetConfig {
     pub ground_item_path: String,
     // pub tile_path: String,
 }
-pub struct Consumable {
+pub struct ConsumableConfig {
     pub effect_healing: f32,
 }
 
-pub struct Tool;
-pub struct Weapon {
+pub struct ToolConfig;
+pub struct WeaponConfig {
     pub base_damage: f32,
 }
-pub struct Placable {}
-pub struct BlockItemDrop {
+pub struct PlacableConfig {}
+pub struct ItemDropConfig {
     pub item_id: String,
     pub stack_count: Range<usize>,
     pub chance: f32,
 }
-pub struct Destructible {
-    pub drops: Vec<BlockItemDrop>,
+pub struct DestructibleConfig {
+    pub drops: Vec<ItemDropConfig>,
 }
-pub struct Harvestable;
+pub struct HarvestableConfig {
+    pub drops: Vec<ItemDropConfig>,
+}

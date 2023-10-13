@@ -1,5 +1,6 @@
 use super::config::{
-    AssetConfig, BlockItemDrop, Consumable, Destructible, ItemConfig, Placable, Weapon,
+    AssetConfig, ConsumableConfig, DestructibleConfig, ItemConfig, ItemDropConfig, PlacableConfig,
+    WeaponConfig,
 };
 
 pub fn load_sample_items() -> Vec<ItemConfig> {
@@ -9,7 +10,7 @@ pub fn load_sample_items() -> Vec<ItemConfig> {
         id: "crab".into(),
         name: "Crab".into(),
         max_stack_count: 12,
-        consumable: Some(Consumable {
+        consumable: Some(ConsumableConfig {
             effect_healing: 20.0,
         }),
         assets: Some(AssetConfig {
@@ -22,9 +23,9 @@ pub fn load_sample_items() -> Vec<ItemConfig> {
         id: "anvil".into(),
         name: "Anvil".into(),
         max_stack_count: 4,
-        placable: Some(Placable {}),
-        destructible: Some(Destructible {
-            drops: vec![BlockItemDrop {
+        placable: Some(PlacableConfig {}),
+        destructible: Some(DestructibleConfig {
+            drops: vec![ItemDropConfig {
                 item_id: "anvil".into(),
                 stack_count: 1..1,
                 chance: 1.0,
@@ -39,7 +40,7 @@ pub fn load_sample_items() -> Vec<ItemConfig> {
     items.push(ItemConfig {
         id: "sword".into(),
         name: "Sword".into(),
-        weapon: Some(Weapon { base_damage: 20.0 }),
+        weapon: Some(WeaponConfig { base_damage: 20.0 }),
         assets: Some(AssetConfig {
             ground_item_path: "test/sword.png".into(),
         }),
