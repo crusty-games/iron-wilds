@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::{prelude::ReflectInspectorOptions, InspectorOptions};
-use std::{collections::HashMap, ops::Add};
+use std::collections::HashMap;
+use std::ops::{Add, Range};
 
 use crate::resources::items::ItemStore;
 
@@ -36,6 +37,10 @@ impl Storage {
             items.insert(slot_index, None);
         }
         Self { capacity, items }
+    }
+
+    pub fn range(&self) -> Range<usize> {
+        0..self.capacity
     }
 
     pub fn add_item(&mut self, item_store: &ItemStore, storage_item: &StorageItem) -> AddItem {
@@ -96,7 +101,7 @@ impl Storage {
         let item = item_store.get(&item_id);
         let mut target_slots: Vec<TargetSlot> = Vec::new();
         let mut stack_left = stack_count.clone();
-        for slot_index in 0..self.capacity {
+        for slot_index in self.range() {
             let storage_item = self.items.get(&slot_index).unwrap();
             if stack_left <= 0 {
                 continue;
