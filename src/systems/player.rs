@@ -26,3 +26,17 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         },
     ));
 }
+
+pub fn follow_player(
+    mut camera_query: Query<&mut Transform, (With<Camera2d>, Without<PrimaryPlayer>)>,
+    player_query: Query<&Transform, (With<PrimaryPlayer>, Without<Camera2d>)>,
+    time: Res<Time>,
+) {
+    for mut camera in camera_query.iter_mut() {
+        for player in player_query.iter() {
+            let translation =
+                (player.translation - camera.translation) * time.delta_seconds() * 4.0;
+            camera.translation += translation;
+        }
+    }
+}
