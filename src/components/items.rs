@@ -1,76 +1,19 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::{Fill, ShapeBundle};
+use bevy_inspector_egui::{prelude::ReflectInspectorOptions, InspectorOptions};
 
-use super::physics::Physics;
+use super::physics::{Gravitate, GravitateToPlayer, Physics};
 
-#[derive(Component, Clone, Default)]
-pub struct Item {
-    pub id: String,
-    pub name: String,
-}
-
-impl Item {
-    pub fn new<S: AsRef<str>>(id: S, name: S) -> Self {
-        Self {
-            id: id.as_ref().into(),
-            name: name.as_ref().into(),
-        }
-    }
-}
-
-// Food Related
-#[derive(Component, Clone, Default)]
-pub struct Placable {
-    pub is_wall: bool,
-    pub is_floor: bool,
-}
-
-#[derive(Component, Clone, Default)]
-pub struct Consumable {
-    pub effect_healing: f32,
-}
-
-// Tool/Weapon Related
-#[derive(Component, Clone)]
-pub struct Tool;
-
-#[derive(Component, Clone, Default)]
-pub struct Weapon {
-    pub base_damage: f32,
-}
-
-// Block Related
-#[derive(Component, Clone)]
-pub struct Destructible;
-
-#[derive(Component, Clone)]
-pub struct Harvestable;
-
-// General item data
-#[derive(Component, Clone, Default)]
-pub struct Stackable {
-    pub max_stack: usize,
-}
-
-// Item State Modifer
-#[derive(Component, Clone, Default)]
+#[derive(Component, Reflect, InspectorOptions)]
+#[reflect(InspectorOptions)]
 pub struct GroundItem {
-    pub count: usize,
-}
-
-#[derive(Component, Clone, Default)]
-pub struct BlockItem;
-
-#[derive(Component, Clone, Default)]
-pub struct InventoryItem {
+    pub item_id: String,
     pub stack_count: usize,
+    pub pick_up_timeout: Timer,
 }
 
-// Bundles
 #[derive(Bundle)]
 pub struct GroundItemBundle {
     pub ground_item: GroundItem,
+    pub gravitate: (Gravitate, GravitateToPlayer),
     pub physics: Physics,
-    pub shape: ShapeBundle,
-    pub fill: Fill,
 }

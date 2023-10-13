@@ -1,11 +1,10 @@
 pub mod config;
-mod load_food;
-mod load_weapons;
+pub mod load;
 
 use bevy::prelude::*;
 use std::collections::HashMap;
 
-use self::{config::ItemConfig, load_food::load_food_items, load_weapons::load_weapon_items};
+use self::{config::ItemConfig, load::load_sample_items};
 
 #[derive(Resource)]
 pub struct ItemStore {
@@ -20,20 +19,12 @@ impl Default for ItemStore {
     }
 }
 
-macro_rules! load_items {
-    ($items:expr, $load:ident) => {
-        for item in &mut $load() {
-            println!("Loaded item {}:{}", item.id(), item.name());
-            $items.insert(item.id().clone(), item.to_owned());
-        }
-    };
-}
-
 impl ItemStore {
     fn load_items() -> HashMap<String, ItemConfig> {
         let mut items: HashMap<String, ItemConfig> = HashMap::new();
-        load_items!(items, load_weapon_items);
-        load_items!(items, load_food_items);
+        for item in load_sample_items().into_iter() {
+            items.insert(item.id.clone(), item);
+        }
         items
     }
 
@@ -41,7 +32,7 @@ impl ItemStore {
         let id_ref = id.as_ref();
         match self.items.get(id_ref) {
             Some(item) => item,
-            None => panic!("Item by ID \"${id_ref}\" not found"),
+            None => panic!("Item by ID \"{id_ref}\" not found"),
         }
     }
 }
