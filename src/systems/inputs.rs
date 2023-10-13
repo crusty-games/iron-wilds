@@ -1,8 +1,10 @@
+use bevy::input::mouse::{MouseScrollUnit, MouseWheel};
 use bevy::prelude::*;
 
 use crate::components::physics::Physics;
 use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::storage::StorageItem;
+use crate::events::inventory::LogInventoryEvent;
 use crate::events::items::{SpawnItemEvent, SpawnKind};
 use crate::resources::inventory::Inventory;
 use crate::resources::physics::PhysicsTimer;
@@ -35,41 +37,71 @@ pub fn move_player(
     }
 }
 
-macro_rules! drop_slot {
-    ($keyboard_input:ident, $inventory:ident, $spawn_event:ident, $position:ident, $key:ident, $index:expr) => {
-        if $keyboard_input.just_pressed(KeyCode::$key) {
+pub fn drop_item(
+    player_query: Query<&Physics, (With<PrimaryPlayer>, With<Player>)>,
+    mut spawn_event: EventWriter<SpawnItemEvent>,
+    mut inventory: ResMut<Inventory>,
+    keyboard_input: Res<Input<KeyCode>>,
+    mut log_inventory_event: EventWriter<LogInventoryEvent>,
+) {
+    let index = inventory.hotbar.active_slot;
+    for Physics { position, .. } in player_query.iter() {
+        if keyboard_input.just_pressed(KeyCode::V) {
             if let Some(StorageItem {
                 item_id,
                 stack_count,
-            }) = $inventory.storage.items.get(&$index).unwrap()
+            }) = inventory.storage.items.get(&index).unwrap()
             {
-                $spawn_event.send(SpawnItemEvent {
+                spawn_event.send(SpawnItemEvent {
                     kind: SpawnKind::GroundLoot {
                         item_id: item_id.clone(),
                         stack_count: stack_count.clone(),
-                        position: $position.clone(),
+                        position: position.clone(),
                     },
                 });
-                *$inventory.storage.items.get_mut(&$index).unwrap() = None;
+                *inventory.storage.items.get_mut(&index).unwrap() = None;
+                log_inventory_event.send(LogInventoryEvent);
             }
+        }
+    }
+}
+
+macro_rules! choose_key_slot {
+    ($keyboard_input:ident, $inventory:ident, $log_inventory_event:ident, $key:ident, $index:expr) => {
+        if $keyboard_input.just_pressed(KeyCode::$key) {
+            $inventory.hotbar.active_slot = $index;
+            $log_inventory_event.send(LogInventoryEvent);
         }
     };
 }
 
-pub fn drop_items(
-    player_query: Query<(&Player, &Physics), With<PrimaryPlayer>>,
-    mut spawn_event: EventWriter<SpawnItemEvent>,
+pub fn choose_active_slot_keyboard(
     mut inventory: ResMut<Inventory>,
     keyboard_input: Res<Input<KeyCode>>,
+    mut log_inventory_event: EventWriter<LogInventoryEvent>,
 ) {
-    for (_, Physics { position, .. }) in player_query.iter() {
-        drop_slot!(keyboard_input, inventory, spawn_event, position, Key1, 0);
-        drop_slot!(keyboard_input, inventory, spawn_event, position, Key2, 1);
-        drop_slot!(keyboard_input, inventory, spawn_event, position, Key3, 2);
-        drop_slot!(keyboard_input, inventory, spawn_event, position, Key4, 3);
-        drop_slot!(keyboard_input, inventory, spawn_event, position, Key5, 4);
-        drop_slot!(keyboard_input, inventory, spawn_event, position, Key6, 5);
-        drop_slot!(keyboard_input, inventory, spawn_event, position, Key7, 6);
-        drop_slot!(keyboard_input, inventory, spawn_event, position, Key8, 7);
+    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key1, 0);
+    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key2, 1);
+    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key3, 2);
+    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key4, 3);
+    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key5, 4);
+    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key6, 5);
+    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key7, 6);
+    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key8, 7);
+}
+
+pub fn choose_active_slot_scroll(
+    mut inventory: ResMut<Inventory>,
+    mut scroll_event: EventReader<MouseWheel>,
+    mut log_inventory_event: EventWriter<LogInventoryEvent>,
+) {
+    for ev in scroll_event.iter() {
+        if let MouseScrollUnit::Line = ev.unit {
+            inventory.hotbar.active_slot = ((inventory.hotbar.active_slot as i32) - (ev.y as i32))
+                .max(0)
+                .min((inventory.hotbar.capacity as i32) - 1)
+                as usize;
+            log_inventory_event.send(LogInventoryEvent);
+        }
     }
 }
