@@ -3,6 +3,8 @@ mod events;
 mod plugins;
 mod resources;
 mod systems;
+
+#[cfg(test)]
 mod tests;
 
 use plugins::inputs::IronWildsInputsPlugin;
