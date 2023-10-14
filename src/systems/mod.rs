@@ -4,3 +4,4 @@ pub mod items;
 pub mod physics;
 pub mod player;
 pub mod setup;
+pub mod ui;
