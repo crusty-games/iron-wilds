@@ -130,14 +130,3 @@ pub fn inventory_ui(
         }
     }
 }
-
-pub fn click_inventory_slot(
-    slots_query: Query<(&InventorySlot, &Interaction)>,
-    mut inventory: ResMut<Inventory>,
-) {
-    for (slot, interaction) in slots_query.iter() {
-        if matches!(interaction, Interaction::Pressed) {
-            inventory.hotbar.active_slot = slot.slot_index;
-        }
-    }
-}
