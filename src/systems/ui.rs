@@ -47,7 +47,7 @@ pub fn spawn_inventory_ui(mut commands: Commands, inventory: Res<Inventory>) {
                 for slot_index in inventory.hotbar.range() {
                     container.spawn((
                         InventorySlot { slot_index },
-                        NodeBundle {
+                        ButtonBundle {
                             style: Style {
                                 height: INVENTORY_SLOT_SIZE,
                                 width: INVENTORY_SLOT_SIZE,
@@ -59,6 +59,7 @@ pub fn spawn_inventory_ui(mut commands: Commands, inventory: Res<Inventory>) {
                                 ..default()
                             },
                             border_color: INVENTORY_DEFAULT_BORDER_COLOR.into(),
+                            background_color: Color::rgba(0.0, 0.0, 0.0, 0.0).into(),
                             ..default()
                         },
                     ));
@@ -125,6 +126,17 @@ pub fn inventory_ui(
                     }
                 });
             }
+        }
+    }
+}
+
+pub fn click_inventory_slot(
+    slots_query: Query<(&InventorySlot, &Interaction)>,
+    mut inventory: ResMut<Inventory>,
+) {
+    for (slot, interaction) in slots_query.iter() {
+        if matches!(interaction, Interaction::Pressed) {
+            inventory.hotbar.active_slot = slot.slot_index;
         }
     }
 }
