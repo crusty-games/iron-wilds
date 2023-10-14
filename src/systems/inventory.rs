@@ -3,7 +3,6 @@ use bevy::prelude::*;
 use crate::components::items::GroundItem;
 use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::{physics::Physics, storage::StorageItem};
-use crate::events::inventory::LogInventoryEvent;
 use crate::resources::inventory::{Inventory, INVENTORY_COLUMNS, INVENTORY_ROWS};
 use crate::resources::items::ItemStore;
 
@@ -13,7 +12,6 @@ pub fn pick_up_ground_items(
     mut item_query: Query<(Entity, &Physics, &mut GroundItem)>,
     mut inventory: ResMut<Inventory>,
     item_store: Res<ItemStore>,
-    mut log_inventory_event: EventWriter<LogInventoryEvent>,
 ) {
     for (player, player_physics) in player_query.iter() {
         for (item_entity, item_physics, mut ground_item) in item_query.iter_mut() {
@@ -36,18 +34,14 @@ pub fn pick_up_ground_items(
                     } else {
                         ground_item.stack_count = transaction.stack_left;
                     }
-                    log_inventory_event.send(LogInventoryEvent);
                 }
             }
         }
     }
 }
 
-pub fn log_inventory(
-    inventory: Res<Inventory>,
-    log_inventory_event: EventReader<LogInventoryEvent>,
-) {
-    if log_inventory_event.len() == 0 {
+pub fn log_inventory(inventory: Res<Inventory>) {
+    if !inventory.is_changed() {
         return;
     }
     let pad = "        ";

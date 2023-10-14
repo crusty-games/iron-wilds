@@ -4,7 +4,6 @@ use bevy::prelude::*;
 use crate::components::physics::Physics;
 use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::storage::StorageItem;
-use crate::events::inventory::LogInventoryEvent;
 use crate::events::items::{SpawnItemEvent, SpawnKind};
 use crate::resources::inventory::Inventory;
 use crate::resources::physics::PhysicsTimer;
@@ -42,7 +41,6 @@ pub fn drop_item(
     mut spawn_event: EventWriter<SpawnItemEvent>,
     mut inventory: ResMut<Inventory>,
     keyboard_input: Res<Input<KeyCode>>,
-    mut log_inventory_event: EventWriter<LogInventoryEvent>,
 ) {
     let index = inventory.hotbar.active_slot;
     for Physics { position, .. } in player_query.iter() {
@@ -60,17 +58,15 @@ pub fn drop_item(
                     },
                 });
                 *inventory.storage.items.get_mut(&index).unwrap() = None;
-                log_inventory_event.send(LogInventoryEvent);
             }
         }
     }
 }
 
 macro_rules! choose_key_slot {
-    ($keyboard_input:ident, $inventory:ident, $log_inventory_event:ident, $key:ident, $index:expr) => {
+    ($keyboard_input:ident, $inventory:ident, $key:ident, $index:expr) => {
         if $keyboard_input.just_pressed(KeyCode::$key) {
             $inventory.hotbar.active_slot = $index;
-            $log_inventory_event.send(LogInventoryEvent);
         }
     };
 }
@@ -78,22 +74,20 @@ macro_rules! choose_key_slot {
 pub fn choose_active_slot_keyboard(
     mut inventory: ResMut<Inventory>,
     keyboard_input: Res<Input<KeyCode>>,
-    mut log_inventory_event: EventWriter<LogInventoryEvent>,
 ) {
-    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key1, 0);
-    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key2, 1);
-    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key3, 2);
-    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key4, 3);
-    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key5, 4);
-    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key6, 5);
-    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key7, 6);
-    choose_key_slot!(keyboard_input, inventory, log_inventory_event, Key8, 7);
+    choose_key_slot!(keyboard_input, inventory, Key1, 0);
+    choose_key_slot!(keyboard_input, inventory, Key2, 1);
+    choose_key_slot!(keyboard_input, inventory, Key3, 2);
+    choose_key_slot!(keyboard_input, inventory, Key4, 3);
+    choose_key_slot!(keyboard_input, inventory, Key5, 4);
+    choose_key_slot!(keyboard_input, inventory, Key6, 5);
+    choose_key_slot!(keyboard_input, inventory, Key7, 6);
+    choose_key_slot!(keyboard_input, inventory, Key8, 7);
 }
 
 pub fn choose_active_slot_scroll(
     mut inventory: ResMut<Inventory>,
     mut scroll_event: EventReader<MouseWheel>,
-    mut log_inventory_event: EventWriter<LogInventoryEvent>,
 ) {
     for ev in scroll_event.iter() {
         if let MouseScrollUnit::Line = ev.unit {
@@ -101,7 +95,6 @@ pub fn choose_active_slot_scroll(
                 .max(0)
                 .min((inventory.hotbar.capacity as i32) - 1)
                 as usize;
-            log_inventory_event.send(LogInventoryEvent);
         }
     }
 }
