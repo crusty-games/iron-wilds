@@ -4,6 +4,7 @@ use bevy::prelude::*;
 use crate::components::physics::Physics;
 use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::storage::StorageItem;
+use crate::components::ui::InventorySlot;
 use crate::events::items::{SpawnItemEvent, SpawnKind};
 use crate::resources::inventory::Inventory;
 use crate::resources::physics::PhysicsTimer;
@@ -95,6 +96,17 @@ pub fn choose_active_slot_scroll(
                 .max(0)
                 .min((inventory.hotbar.capacity as i32) - 1)
                 as usize;
+        }
+    }
+}
+
+pub fn click_inventory_slot(
+    slots_query: Query<(&InventorySlot, &Interaction)>,
+    mut inventory: ResMut<Inventory>,
+) {
+    for (slot, interaction) in slots_query.iter() {
+        if matches!(interaction, Interaction::Pressed) {
+            inventory.hotbar.active_slot = slot.slot_index;
         }
     }
 }
