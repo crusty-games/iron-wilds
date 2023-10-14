@@ -3,7 +3,7 @@ use std::ops::Range;
 use bevy::prelude::*;
 use bevy_inspector_egui::{prelude::ReflectInspectorOptions, InspectorOptions};
 
-use crate::components::storage::Storage;
+use crate::components::storage::{Storage, StorageItem};
 
 #[derive(Reflect, Resource, InspectorOptions)]
 #[reflect(Resource, InspectorOptions)]
@@ -37,5 +37,11 @@ pub struct Hotbar {
 impl Hotbar {
     pub fn range(&self) -> Range<usize> {
         0..self.capacity
+    }
+}
+
+impl Inventory {
+    pub fn active_item(&self) -> &Option<StorageItem> {
+        self.storage.items.get(&self.hotbar.active_slot).unwrap()
     }
 }
