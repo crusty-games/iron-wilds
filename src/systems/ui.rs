@@ -71,11 +71,12 @@ pub fn spawn_inventory_ui(mut commands: Commands, inventory: Res<Inventory>) {
 pub fn inventory_ui(
     mut commands: Commands,
     mut slots_query: Query<(&InventorySlot, Entity, &mut BorderColor)>,
+    inventory_query: Query<Added<InventoryRoot>>,
     inventory: Res<Inventory>,
     item_store: Res<ItemStore>,
     asset_server: Res<AssetServer>,
 ) {
-    if !inventory.is_changed() {
+    if !inventory.is_changed() || inventory_query.is_empty() {
         return;
     }
     for (slot, entity, mut border_color) in slots_query.iter_mut() {
