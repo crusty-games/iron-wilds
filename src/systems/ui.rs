@@ -5,6 +5,8 @@ use crate::components::ui::{InventoryContainer, InventoryRoot, InventorySlot};
 use crate::resources::inventory::Inventory;
 use crate::resources::items::{config::AssetConfig, ItemStore};
 
+pub const FONT: &str = "fonts/VT323-Regular.ttf";
+
 pub const INVENTORY_SLOT_SIZE: Val = Val::Px(48.0);
 pub const INVENTORY_SLOT_ICON_SIZE: Val = Val::Px(32.0);
 pub const INVENTORY_SLOT_GAP: Val = Val::Px(2.0);
@@ -83,8 +85,10 @@ pub fn inventory_ui(
             INVENTORY_DEFAULT_BORDER_COLOR
         });
         entity_commands.despawn_descendants();
-        if let Some(StorageItem { item_id, .. }) =
-            inventory.storage.items.get(&slot.slot_index).unwrap()
+        if let Some(StorageItem {
+            item_id,
+            stack_count,
+        }) = inventory.storage.items.get(&slot.slot_index).unwrap()
         {
             let item = item_store.get(item_id);
             if let Some(AssetConfig { ground_item_path }) = &item.assets {
@@ -101,6 +105,24 @@ pub fn inventory_ui(
                         },
                         UiImage::new(asset_server.load(ground_item_path)),
                     ));
+                    if stack_count > &1 {
+                        slot_el.spawn(
+                            TextBundle::from_section(
+                                stack_count.to_string(),
+                                TextStyle {
+                                    font: asset_server.load(FONT),
+                                    font_size: 20.0,
+                                    color: Color::WHITE,
+                                },
+                            )
+                            .with_style(Style {
+                                position_type: PositionType::Absolute,
+                                bottom: Val::Px(0.0),
+                                right: Val::Px(5.0),
+                                ..default()
+                            }),
+                        );
+                    }
                 });
             }
         }
