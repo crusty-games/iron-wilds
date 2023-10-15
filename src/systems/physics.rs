@@ -17,6 +17,7 @@ pub fn compute_physics(mut physics_query: Query<&mut Physics>, physics_timer: Re
     }
 }
 
+#[allow(clippy::type_complexity)]
 pub fn gravitate<Marker: Component, Target: Component>(
     mut physics_query: Query<(&mut Physics, &Gravitate), (With<Marker>, Without<Target>)>,
     target_query: Query<&Physics, (With<Target>, Without<Marker>)>,
