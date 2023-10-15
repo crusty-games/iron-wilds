@@ -21,11 +21,6 @@ pub fn clamp_vec2(vec: Vec2) -> Vec2 {
 
 impl MultiInputAxis {
     pub fn combine(&self) -> Vec2 {
-        let keyboard = clamp_vec2(self.keyboard);
-        let controller = clamp_vec2(self.controller);
-        clamp_vec2(Vec2 {
-            x: keyboard.x + controller.x,
-            y: keyboard.y + controller.y,
-        })
+        clamp_vec2(clamp_vec2(self.keyboard) + clamp_vec2(self.controller))
     }
 }
