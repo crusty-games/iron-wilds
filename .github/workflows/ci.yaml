@@ -5,7 +5,7 @@ on:
       - main
 
 
-name: CI
+name: Lint, Test, Build
 
 jobs:
   ci:
