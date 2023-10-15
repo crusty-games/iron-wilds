@@ -1,7 +1,14 @@
 use crate::components::physics::Physics;
 use crate::components::player::{Player, PrimaryPlayer};
+use crate::resources::inputs::GameInputs;
+use crate::resources::physics::PhysicsTimer;
 
 use bevy::prelude::*;
+
+#[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
+pub enum PlayerSet {
+    Movement,
+}
 
 pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     let scale = 3.0;
@@ -25,6 +32,19 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..default()
         },
     ));
+}
+
+pub fn player_movement(
+    mut player_query: Query<(&Player, &mut Physics), With<PrimaryPlayer>>,
+    game_inputs: Res<GameInputs>,
+    physics_timer: Res<PhysicsTimer>,
+) {
+    if !physics_timer.main_tick.finished() {
+        return;
+    }
+    for (player, mut physics) in player_query.iter_mut() {
+        physics.velocity += game_inputs.movement.combine() * player.movement_speed;
+    }
 }
 
 pub fn follow_player(

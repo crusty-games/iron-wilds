@@ -1,3 +1,4 @@
+use bevy::input::gamepad::GamepadEvent;
 use bevy::input::mouse::{MouseScrollUnit, MouseWheel};
 use bevy::prelude::*;
 
@@ -6,34 +7,46 @@ use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::storage::StorageItem;
 use crate::components::ui::InventorySlot;
 use crate::events::items::{SpawnItemEvent, SpawnKind};
+use crate::resources::inputs::GameInputs;
 use crate::resources::inventory::Inventory;
-use crate::resources::physics::PhysicsTimer;
 
-pub fn move_player(
-    mut player_query: Query<(&Player, &mut Physics)>,
-    keyboard_input: Res<Input<KeyCode>>,
-    physics_timer: Res<PhysicsTimer>,
+pub fn movement_keyboard(keyboard_input: Res<Input<KeyCode>>, mut game_inputs: ResMut<GameInputs>) {
+    if !keyboard_input.is_changed() {
+        return;
+    }
+    let mut total_vec = Vec2::ZERO;
+    if keyboard_input.pressed(KeyCode::W) {
+        total_vec.y += 1.0;
+    }
+    if keyboard_input.pressed(KeyCode::S) {
+        total_vec.y -= 1.0;
+    }
+    if keyboard_input.pressed(KeyCode::D) {
+        total_vec.x += 1.0;
+    }
+    if keyboard_input.pressed(KeyCode::A) {
+        total_vec.x -= 1.0;
+    }
+    game_inputs.movement.keyboard = if total_vec.length() == 0.0 {
+        total_vec
+    } else {
+        total_vec.normalize()
+    };
+}
+
+pub fn movement_controller(
+    mut gamepad_event: EventReader<GamepadEvent>,
+    mut game_inputs: ResMut<GameInputs>,
 ) {
-    if physics_timer.main_tick.finished() {
-        for (player, mut object) in player_query.iter_mut() {
-            let mut total_vec = Vec2::ZERO;
-            if keyboard_input.pressed(KeyCode::W) {
-                total_vec.y += 1.0;
-            }
-            if keyboard_input.pressed(KeyCode::S) {
-                total_vec.y -= 1.0;
-            }
-            if keyboard_input.pressed(KeyCode::D) {
-                total_vec.x += 1.0;
-            }
-            if keyboard_input.pressed(KeyCode::A) {
-                total_vec.x -= 1.0;
-            }
-            if total_vec.length() > 0.0 {
-                total_vec = total_vec.normalize() * player.movement_speed;
-                object.velocity += total_vec;
-            }
-        }
+    for event in gamepad_event.iter() {
+        match event {
+            GamepadEvent::Axis(axis_event) => match axis_event.axis_type {
+                GamepadAxisType::LeftStickX => game_inputs.movement.controller.x = axis_event.value,
+                GamepadAxisType::LeftStickY => game_inputs.movement.controller.y = axis_event.value,
+                _ => {}
+            },
+            _ => {}
+        };
     }
 }
 

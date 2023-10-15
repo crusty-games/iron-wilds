@@ -4,6 +4,12 @@ use std::ops::{Add, Mul};
 use crate::components::physics::{Gravitate, Physics};
 use crate::resources::physics::PhysicsTimer;
 
+#[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
+pub enum PhysicsSet {
+    Computation,
+    Rendering,
+}
+
 pub fn tick_physics_timer(mut physics_timer: ResMut<PhysicsTimer>, time: Res<Time>) {
     physics_timer.main_tick.tick(time.delta());
 }
