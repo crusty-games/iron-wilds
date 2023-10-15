@@ -18,5 +18,9 @@ jobs:
           sudo apt-get install -y g++ pkg-config libx11-dev libasound2-dev libudev-dev
           sudo apt-get install -y lld libxcursor-dev alsa libegl1-mesa libegl1
       - uses: actions/checkout@v3
+      - name: Check
+        run: cargo check --profile ci
+      - name: Clippy
+        run: cargo clippy --profile ci
       - name: Run tests
-        run: cargo test --verbose
+        run: cargo test --verbose --profile ci
