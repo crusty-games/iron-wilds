@@ -41,14 +41,13 @@ pub fn movement_controller(
     mut game_inputs: ResMut<GameInputs>,
 ) {
     for event in gamepad_event.iter() {
-        match event {
-            GamepadEvent::Axis(axis_event) => match axis_event.axis_type {
+        if let GamepadEvent::Axis(axis_event) = event {
+            match axis_event.axis_type {
                 GamepadAxisType::LeftStickX => game_inputs.movement.controller.x = axis_event.value,
                 GamepadAxisType::LeftStickY => game_inputs.movement.controller.y = axis_event.value,
                 _ => {}
-            },
-            _ => {}
-        };
+            }
+        }
     }
 }
 
@@ -63,15 +62,12 @@ pub fn drop_item(
 
     if !drop_item {
         for event in gamepad_event.iter() {
-            match event {
-                GamepadEvent::Button(button_event) => {
-                    if button_event.value == 1.0
-                        && matches!(button_event.button_type, GamepadButtonType::West)
-                    {
-                        drop_item = true;
-                    }
+            if let GamepadEvent::Button(button_event) = event {
+                if button_event.value == 1.0
+                    && matches!(button_event.button_type, GamepadButtonType::West)
+                {
+                    drop_item = true;
                 }
-                _ => {}
             }
         }
     }
@@ -141,17 +137,14 @@ pub fn choose_active_slot_controller(
 ) {
     for event in gamepad_event.iter() {
         let mut change = 0;
-        match event {
-            GamepadEvent::Button(button_event) => {
-                if button_event.value == 1.0 {
-                    match button_event.button_type {
-                        GamepadButtonType::LeftTrigger => change -= 1,
-                        GamepadButtonType::RightTrigger => change += 1,
-                        _ => {}
-                    }
+        if let GamepadEvent::Button(button_event) = event {
+            if button_event.value == 1.0 {
+                match button_event.button_type {
+                    GamepadButtonType::LeftTrigger => change -= 1,
+                    GamepadButtonType::RightTrigger => change += 1,
+                    _ => {}
                 }
             }
-            _ => {}
         };
         if change != 0 {
             let range = inventory.hotbar.range();
