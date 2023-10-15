@@ -32,7 +32,6 @@ codegen-units = 512
 opt-level = 0
 incremental = true
 debug = 1
-lto = false
 debug-assertions = true
 overflow-checks = true
 codegen-units = 512
