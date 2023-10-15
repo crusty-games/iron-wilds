@@ -17,13 +17,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y g++ pkg-config libx11-dev libasound2-dev libudev-dev
           sudo apt-get install -y libxcursor-dev alsa libegl1-mesa libegl1
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --profile test
+      - uses: actions/checkout@v3
+      - name: Test
+        run: |
+          cargo test --profile test
