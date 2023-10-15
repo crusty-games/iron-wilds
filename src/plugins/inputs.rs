@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::resources::inputs::GameInputs;
+use crate::systems::inputs::choose_active_slot_controller;
 use crate::systems::inputs::choose_active_slot_keyboard;
 use crate::systems::inputs::choose_active_slot_scroll;
 use crate::systems::inputs::click_inventory_slot;
@@ -20,6 +21,7 @@ impl Plugin for IronWildsInputsPlugin {
                 drop_item,
                 choose_active_slot_keyboard,
                 choose_active_slot_scroll,
+                choose_active_slot_controller,
                 click_inventory_slot,
             ),
         );

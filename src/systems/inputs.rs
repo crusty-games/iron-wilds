@@ -1,3 +1,5 @@
+use std::ops::Add;
+
 use bevy::input::gamepad::GamepadEvent;
 use bevy::input::mouse::{MouseScrollUnit, MouseWheel};
 use bevy::prelude::*;
@@ -55,24 +57,44 @@ pub fn drop_item(
     mut spawn_event: EventWriter<SpawnItemEvent>,
     mut inventory: ResMut<Inventory>,
     keyboard_input: Res<Input<KeyCode>>,
+    mut gamepad_event: EventReader<GamepadEvent>,
 ) {
+    let mut drop_item = keyboard_input.just_pressed(KeyCode::V);
+
+    if !drop_item {
+        for event in gamepad_event.iter() {
+            match event {
+                GamepadEvent::Button(button_event) => {
+                    if button_event.value == 1.0
+                        && matches!(button_event.button_type, GamepadButtonType::West)
+                    {
+                        drop_item = true;
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+
+    if !drop_item {
+        return;
+    }
+
     let index = inventory.hotbar.active_slot;
     for Physics { position, .. } in player_query.iter() {
-        if keyboard_input.just_pressed(KeyCode::V) {
-            if let Some(StorageItem {
-                item_id,
-                stack_count,
-            }) = inventory.storage.items.get(&index).unwrap()
-            {
-                spawn_event.send(SpawnItemEvent {
-                    kind: SpawnKind::GroundLoot {
-                        item_id: item_id.clone(),
-                        stack_count: *stack_count,
-                        position: *position,
-                    },
-                });
-                *inventory.storage.items.get_mut(&index).unwrap() = None;
-            }
+        if let Some(StorageItem {
+            item_id,
+            stack_count,
+        }) = inventory.storage.items.get(&index).unwrap()
+        {
+            spawn_event.send(SpawnItemEvent {
+                kind: SpawnKind::GroundLoot {
+                    item_id: item_id.clone(),
+                    stack_count: *stack_count,
+                    position: *position,
+                },
+            });
+            *inventory.storage.items.get_mut(&index).unwrap() = None;
         }
     }
 }
@@ -108,6 +130,34 @@ pub fn choose_active_slot_scroll(
             inventory.hotbar.active_slot = ((inventory.hotbar.active_slot as i32) - (ev.y as i32))
                 .max(0)
                 .min((inventory.hotbar.capacity as i32) - 1)
+                as usize;
+        }
+    }
+}
+
+pub fn choose_active_slot_controller(
+    mut inventory: ResMut<Inventory>,
+    mut gamepad_event: EventReader<GamepadEvent>,
+) {
+    for event in gamepad_event.iter() {
+        let mut change = 0;
+        match event {
+            GamepadEvent::Button(button_event) => {
+                if button_event.value == 1.0 {
+                    match button_event.button_type {
+                        GamepadButtonType::LeftTrigger => change -= 1,
+                        GamepadButtonType::RightTrigger => change += 1,
+                        _ => {}
+                    }
+                }
+            }
+            _ => {}
+        };
+        if change != 0 {
+            let range = inventory.hotbar.range();
+            inventory.hotbar.active_slot = (inventory.hotbar.active_slot as isize)
+                .add(change)
+                .clamp(range.start as isize, range.end as isize)
                 as usize;
         }
     }
