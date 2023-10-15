@@ -2,16 +2,36 @@
 name = "iron-wilds"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+default-run = "iron-wilds"
 
 [dependencies]
 bevy = "0.11.3"
 bevy_prototype_lyon = "0.9.0"
 rand = "0.8.5"
 bevy-inspector-egui = "0.20.0"
-clearscreen = "2.0.1"
-
 
 [target.'cfg(unix)'.dependencies]
-bevy = { version="0.11.3", features=["wayland"]}
+bevy = { version = "0.11.3", features = ["wayland"] }
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.test]
+opt-level = 0
+incremental = true
+debug = 1
+lto = false
+debug-assertions = true
+overflow-checks = true
+codegen-units = 512
+
+[profile.test.package."*"]
+opt-level = 0
+incremental = true
+debug = 1
+debug-assertions = true
+overflow-checks = true
+codegen-units = 512

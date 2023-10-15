@@ -5,23 +5,25 @@ on:
       - main
 
 
-name: cargo test
+name: cargo test; cargo check; cargo clippy
 
 jobs:
-  test:
-    name: Test
+  test_check_clippy:
+    name: Test, Check, Clippy
     runs-on: ubuntu-latest
     steps:
       - name: Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y g++ pkg-config libx11-dev libasound2-dev libudev-dev
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
+          sudo apt-get install -y libxcursor-dev alsa libegl1-mesa libegl1
+      - uses: actions/checkout@v3
+      - name: Test
+        run: |
+          cargo test --profile test
+      - name: Check
+        run: |
+          cargo check --profile test
+      - name: Clippy
+        run: |
+          cargo clippy --profile test
