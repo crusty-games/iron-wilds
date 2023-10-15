@@ -18,5 +18,5 @@ fn test_get_active_item() {
     assert_eq!(inventory.active_item().clone().unwrap().item_id, ID_STONE);
 
     inventory.hotbar.active_slot = 1;
-    assert!(matches!(inventory.active_item(), None));
+    assert!(inventory.active_item().is_none());
 }

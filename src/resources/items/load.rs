@@ -3,6 +3,7 @@ use super::config::{
     WeaponConfig,
 };
 
+#[allow(clippy::vec_init_then_push)]
 pub fn load_sample_items() -> Vec<ItemConfig> {
     let mut items: Vec<ItemConfig> = vec![];
 

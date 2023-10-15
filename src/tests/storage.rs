@@ -12,7 +12,7 @@ fn test_add_and_fit_items() {
 
     assert_eq!(storage.items.len(), STORE_CAPACITY);
     for slot_index in storage.range() {
-        assert!(matches!(storage.items.get(&slot_index).unwrap(), None));
+        assert!(storage.items.get(&slot_index).unwrap().is_none());
     }
 
     storage.add_item(
@@ -26,7 +26,7 @@ fn test_add_and_fit_items() {
     assert_eq!(first_slot.item_id, ID_STONE);
     assert_eq!(first_slot.stack_count, 8);
     for slot_index in 1..STORE_CAPACITY {
-        assert!(matches!(storage.items.get(&slot_index).unwrap(), None));
+        assert!(storage.items.get(&slot_index).unwrap().is_none());
     }
 
     storage.add_item(
@@ -48,7 +48,7 @@ fn test_add_and_fit_items() {
     assert_eq!(third_slot.item_id, ID_SWORD);
     assert_eq!(third_slot.stack_count, 1);
 
-    assert!(matches!(storage.items.get(&3).unwrap(), None));
+    assert!(storage.items.get(&3).unwrap().is_none());
 
     storage.add_item(
         &item_store,
