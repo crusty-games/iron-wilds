@@ -5,11 +5,11 @@ on:
       - main
 
 
-name: cargo check
+name: cargo check; cargo clippy
 
 jobs:
-  check:
-    name: Check
+  check_clippy:
+    name: Check + Clippy
     runs-on: ubuntu-latest
     steps:
       - name: Install Dependencies
