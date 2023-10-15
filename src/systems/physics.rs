@@ -17,10 +17,9 @@ pub fn compute_physics(mut physics_query: Query<&mut Physics>, physics_timer: Re
     }
 }
 
-type WithWithout<A, B> = (With<A>, Without<B>);
 pub fn gravitate<Marker: Component, Target: Component>(
-    mut physics_query: Query<(&mut Physics, &Gravitate), WithWithout<Marker, Target>>,
-    target_query: Query<&Physics, WithWithout<Target, Marker>>,
+    mut physics_query: Query<(&mut Physics, &Gravitate), (With<Marker>, Without<Target>)>,
+    target_query: Query<&Physics, (With<Target>, Without<Marker>)>,
     physics_timer: Res<PhysicsTimer>,
 ) {
     if physics_timer.main_tick.finished() {

@@ -27,7 +27,7 @@ pub fn pick_up_ground_items(
                 let transaction = inventory
                     .storage
                     .get_target_slots(&item_store, &storage_item);
-                if !transaction.target_slots.is_empty() {
+                if transaction.target_slots.len() > 0 {
                     inventory.storage.commit_add(&item_store, &transaction);
                     if transaction.stack_left == 0 {
                         commands.entity(item_entity).despawn();

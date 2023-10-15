@@ -55,7 +55,7 @@ impl Storage {
             target_slots,
             ..
         } = transaction;
-        let item = item_store.get(item_id);
+        let item = item_store.get(&item_id);
         for fit in target_slots.iter() {
             match self.items.get_mut(&fit.slot_index).unwrap() {
                 Some(StorageItem {
@@ -98,12 +98,12 @@ impl Storage {
             stack_count,
         } = storage_item;
 
-        let item = item_store.get(item_id);
+        let item = item_store.get(&item_id);
         let mut target_slots: Vec<TargetSlot> = Vec::new();
-        let mut stack_left = stack_count.to_owned();
+        let mut stack_left = stack_count.clone();
         for slot_index in self.range() {
             let storage_item = self.items.get(&slot_index).unwrap();
-            if stack_left == 0 {
+            if stack_left <= 0 {
                 continue;
             }
             if let Some(StorageItem {
@@ -112,12 +112,12 @@ impl Storage {
             }) = storage_item
             {
                 if &item.id == storage_item_id {
-                    let stack_taken = stack_left.min(item.max_stack_count - storage_stack_count);
+                    let stack_taken = stack_left.min(&item.max_stack_count - storage_stack_count);
                     if stack_taken > 0 {
                         stack_left -= stack_taken;
                         target_slots.push(TargetSlot {
                             stack_count: stack_taken,
-                            slot_index,
+                            slot_index: slot_index.clone(),
                         })
                     }
                 }
@@ -127,7 +127,7 @@ impl Storage {
                     stack_left -= stack_taken;
                     target_slots.push(TargetSlot {
                         stack_count: stack_taken,
-                        slot_index,
+                        slot_index: slot_index.clone(),
                     })
                 }
             }

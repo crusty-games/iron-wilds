@@ -54,8 +54,8 @@ pub fn drop_item(
                 spawn_event.send(SpawnItemEvent {
                     kind: SpawnKind::GroundLoot {
                         item_id: item_id.clone(),
-                        stack_count: stack_count.to_owned(),
-                        position: position.to_owned(),
+                        stack_count: stack_count.clone(),
+                        position: position.clone(),
                     },
                 });
                 *inventory.storage.items.get_mut(&index).unwrap() = None;
