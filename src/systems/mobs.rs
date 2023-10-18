@@ -87,7 +87,7 @@ pub fn spawn_mobs(
 
 pub fn tick_random_walk(mut movement_query: Query<&mut RandomWalk>, time: Res<Time>) {
     for mut random_walk in movement_query.iter_mut() {
-        if matches!(random_walk.state, RandomWalkState::Idling) {
+        if random_walk.active && matches!(random_walk.state, RandomWalkState::Idling) {
             random_walk.timer.tick(time.delta());
         }
     }
