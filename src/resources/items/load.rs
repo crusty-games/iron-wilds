@@ -43,9 +43,9 @@ pub fn load_sample_items() -> Vec<ItemConfig> {
         name: "Sword".into(),
         weapon: Some(WeaponConfig {
             base_damage: 20.0,
+            use_interval_secs: 1.0,
             kind: WeaponKind::Melee {
                 swing_radius: 100.0,
-                swing_duration_secs: 1.0,
             },
         }),
         assets: Some(AssetConfig {

@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use crate::components::items::GroundItem;
 use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::{physics::Physics, storage::StorageItem};
+use crate::events::inventory::ActiveSlotChangeEvent;
 use crate::resources::inventory::Inventory;
 use crate::resources::items::ItemStore;
 
@@ -37,5 +38,14 @@ pub fn pick_up_ground_items(
                 }
             }
         }
+    }
+}
+
+pub fn choose_active_slot(
+    mut inventory: ResMut<Inventory>,
+    mut change_event: EventReader<ActiveSlotChangeEvent>,
+) {
+    for ActiveSlotChangeEvent { slot_index } in change_event.iter() {
+        inventory.hotbar.active_slot = *slot_index;
     }
 }
