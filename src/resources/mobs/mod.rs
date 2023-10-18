@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use bevy::prelude::*;
 
-use self::config::{MobConfig, MovementConfig};
+use self::config::{AssetConfig, MobConfig, MovementConfig};
 
 #[derive(Resource)]
 pub struct MobStore {
@@ -22,13 +22,26 @@ impl Default for MobStore {
                 name: "Ghost".into(),
                 max_health: 100.0,
                 damage: None,
-                movement: Some(MovementConfig::RandomWalk {
+                movement: MovementConfig::RandomWalk {
                     speed: 20.0,
-                    interval_ms: 1000.0..5000.0,
+                    idle_secs: 1.0..5.0,
+                },
+                assets: Some(AssetConfig {
+                    test_path: "test/ghost.png".into(),
                 }),
             },
         );
 
         Self { mobs }
+    }
+}
+
+impl MobStore {
+    pub fn get<S: AsRef<str>>(&self, id: S) -> &MobConfig {
+        let id_ref = id.as_ref();
+        match self.mobs.get(id_ref) {
+            Some(mob) => mob,
+            None => panic!("Mob by ID \"{id_ref}\" not found"),
+        }
     }
 }
