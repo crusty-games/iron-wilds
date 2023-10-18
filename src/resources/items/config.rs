@@ -42,6 +42,13 @@ pub struct ConsumableConfig {
 pub struct ToolConfig;
 pub struct WeaponConfig {
     pub base_damage: f32,
+    pub kind: WeaponKind,
+}
+pub enum WeaponKind {
+    Melee {
+        swing_radius: f32,
+        swing_duration_secs: f32,
+    },
 }
 pub struct PlacableConfig {}
 pub struct ItemDropConfig {

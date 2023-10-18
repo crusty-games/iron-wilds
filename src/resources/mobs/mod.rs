@@ -1,10 +1,10 @@
 pub mod config;
 
+use bevy::prelude::*;
 use std::collections::HashMap;
 
-use bevy::prelude::*;
-
 use self::config::{AssetConfig, MobConfig, MovementConfig};
+use super::items::config::ItemDropConfig;
 
 #[derive(Resource)]
 pub struct MobStore {
@@ -22,6 +22,11 @@ impl Default for MobStore {
                 name: "Ghost".into(),
                 max_health: 100.0,
                 damage: None,
+                drops: vec![ItemDropConfig {
+                    item_id: "crab".into(),
+                    stack_count: 1..5,
+                    chance: 0.5,
+                }],
                 movement: MovementConfig::RandomWalk {
                     speed: 0.75,
                     idle_secs: 1.0..5.0,

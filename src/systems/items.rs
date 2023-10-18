@@ -72,7 +72,7 @@ pub fn spawn_items(mut spawn_event: EventWriter<SpawnItemEvent>, item_store: Res
                         y: (random::<f32>() - 0.5) * 10.0,
                     },
                 },
-            })
+            });
         }
     }
 }
