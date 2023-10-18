@@ -1,3 +1,6 @@
+use std::ops::Add;
+
+use bevy::input::gamepad::GamepadEvent;
 use bevy::input::mouse::{MouseScrollUnit, MouseWheel};
 use bevy::prelude::*;
 
@@ -6,32 +9,43 @@ use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::storage::StorageItem;
 use crate::components::ui::InventorySlot;
 use crate::events::items::{SpawnItemEvent, SpawnKind};
+use crate::resources::inputs::GameInputs;
 use crate::resources::inventory::Inventory;
-use crate::resources::physics::PhysicsTimer;
 
-pub fn move_player(
-    mut player_query: Query<(&Player, &mut Physics)>,
-    keyboard_input: Res<Input<KeyCode>>,
-    physics_timer: Res<PhysicsTimer>,
+pub fn movement_keyboard(keyboard_input: Res<Input<KeyCode>>, mut game_inputs: ResMut<GameInputs>) {
+    if !keyboard_input.is_changed() {
+        return;
+    }
+    let mut total_vec = Vec2::ZERO;
+    if keyboard_input.pressed(KeyCode::W) {
+        total_vec.y += 1.0;
+    }
+    if keyboard_input.pressed(KeyCode::S) {
+        total_vec.y -= 1.0;
+    }
+    if keyboard_input.pressed(KeyCode::D) {
+        total_vec.x += 1.0;
+    }
+    if keyboard_input.pressed(KeyCode::A) {
+        total_vec.x -= 1.0;
+    }
+    game_inputs.movement.keyboard = if total_vec.length() == 0.0 {
+        total_vec
+    } else {
+        total_vec.normalize()
+    };
+}
+
+pub fn movement_controller(
+    mut gamepad_event: EventReader<GamepadEvent>,
+    mut game_inputs: ResMut<GameInputs>,
 ) {
-    if physics_timer.main_tick.finished() {
-        for (player, mut object) in player_query.iter_mut() {
-            let mut total_vec = Vec2::ZERO;
-            if keyboard_input.pressed(KeyCode::W) {
-                total_vec.y += 1.0;
-            }
-            if keyboard_input.pressed(KeyCode::S) {
-                total_vec.y -= 1.0;
-            }
-            if keyboard_input.pressed(KeyCode::D) {
-                total_vec.x += 1.0;
-            }
-            if keyboard_input.pressed(KeyCode::A) {
-                total_vec.x -= 1.0;
-            }
-            if total_vec.length() > 0.0 {
-                total_vec = total_vec.normalize() * player.movement_speed;
-                object.velocity += total_vec;
+    for event in gamepad_event.iter() {
+        if let GamepadEvent::Axis(axis_event) = event {
+            match axis_event.axis_type {
+                GamepadAxisType::LeftStickX => game_inputs.movement.controller.x = axis_event.value,
+                GamepadAxisType::LeftStickY => game_inputs.movement.controller.y = axis_event.value,
+                _ => {}
             }
         }
     }
@@ -42,24 +56,41 @@ pub fn drop_item(
     mut spawn_event: EventWriter<SpawnItemEvent>,
     mut inventory: ResMut<Inventory>,
     keyboard_input: Res<Input<KeyCode>>,
+    mut gamepad_event: EventReader<GamepadEvent>,
 ) {
+    let mut drop_item = keyboard_input.just_pressed(KeyCode::V);
+
+    if !drop_item {
+        for event in gamepad_event.iter() {
+            if let GamepadEvent::Button(button_event) = event {
+                if button_event.value == 1.0
+                    && matches!(button_event.button_type, GamepadButtonType::West)
+                {
+                    drop_item = true;
+                }
+            }
+        }
+    }
+
+    if !drop_item {
+        return;
+    }
+
     let index = inventory.hotbar.active_slot;
     for Physics { position, .. } in player_query.iter() {
-        if keyboard_input.just_pressed(KeyCode::V) {
-            if let Some(StorageItem {
-                item_id,
-                stack_count,
-            }) = inventory.storage.items.get(&index).unwrap()
-            {
-                spawn_event.send(SpawnItemEvent {
-                    kind: SpawnKind::GroundLoot {
-                        item_id: item_id.clone(),
-                        stack_count: *stack_count,
-                        position: *position,
-                    },
-                });
-                *inventory.storage.items.get_mut(&index).unwrap() = None;
-            }
+        if let Some(StorageItem {
+            item_id,
+            stack_count,
+        }) = inventory.storage.items.get(&index).unwrap()
+        {
+            spawn_event.send(SpawnItemEvent {
+                kind: SpawnKind::GroundLoot {
+                    item_id: item_id.clone(),
+                    stack_count: *stack_count,
+                    position: *position,
+                },
+            });
+            *inventory.storage.items.get_mut(&index).unwrap() = None;
         }
     }
 }
@@ -95,6 +126,31 @@ pub fn choose_active_slot_scroll(
             inventory.hotbar.active_slot = ((inventory.hotbar.active_slot as i32) - (ev.y as i32))
                 .max(0)
                 .min((inventory.hotbar.capacity as i32) - 1)
+                as usize;
+        }
+    }
+}
+
+pub fn choose_active_slot_controller(
+    mut inventory: ResMut<Inventory>,
+    mut gamepad_event: EventReader<GamepadEvent>,
+) {
+    for event in gamepad_event.iter() {
+        let mut change = 0;
+        if let GamepadEvent::Button(button_event) = event {
+            if button_event.value == 1.0 {
+                match button_event.button_type {
+                    GamepadButtonType::LeftTrigger => change -= 1,
+                    GamepadButtonType::RightTrigger => change += 1,
+                    _ => {}
+                }
+            }
+        };
+        if change != 0 {
+            let range = inventory.hotbar.range();
+            inventory.hotbar.active_slot = (inventory.hotbar.active_slot as isize)
+                .add(change)
+                .clamp(range.start as isize, range.end as isize)
                 as usize;
         }
     }
