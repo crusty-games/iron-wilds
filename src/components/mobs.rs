@@ -1,7 +1,7 @@
 use std::ops::Range;
 
 use bevy::prelude::*;
-use bevy_inspector_egui::{inspector_options, prelude::ReflectInspectorOptions, InspectorOptions};
+use bevy_inspector_egui::{prelude::ReflectInspectorOptions, InspectorOptions};
 use rand::{thread_rng, Rng};
 
 use super::physics::Physics;

@@ -34,7 +34,7 @@ pub fn spawn_mobs(
     asset_server: Res<AssetServer>,
 ) {
     for SpawnMob { mob_id, position } in spawn_event.iter() {
-        let mob = mob_store.get(&mob_id);
+        let mob = mob_store.get(mob_id);
         let mut entity_commands = commands.spawn((
             Name::new(mob.name.clone()),
             MobBundle {
@@ -46,7 +46,7 @@ pub fn spawn_mobs(
                     health: mob.max_health,
                 },
                 physics: Physics {
-                    position: position.clone(),
+                    position: *position,
                     friction: 0.5,
                     ..default()
                 },
@@ -61,8 +61,8 @@ pub fn spawn_mobs(
                 idle_secs,
             } => {
                 entity_commands.insert(RandomWalk {
-                    speed: speed.clone(),
-                    walk_radius: walk_radius.clone(),
+                    speed: *speed,
+                    walk_radius: *walk_radius,
                     idle_secs: idle_secs.clone(),
                     ..default()
                 });
@@ -103,8 +103,8 @@ pub fn movement_random_walk(mut mob_query: Query<(&mut RandomWalk, &mut Physics)
                 if random_walk.timer.finished() {
                     let to = physics.position
                         + Vec2 {
-                            x: (random::<f32>() - 0.5) * 2.0 * &random_walk.walk_radius,
-                            y: (random::<f32>() - 0.5) * 2.0 * &random_walk.walk_radius,
+                            x: (random::<f32>() - 0.5) * 2.0 * random_walk.walk_radius,
+                            y: (random::<f32>() - 0.5) * 2.0 * random_walk.walk_radius,
                         };
                     random_walk.walk(to);
                 }
