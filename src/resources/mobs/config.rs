@@ -27,5 +27,6 @@ pub enum MovementConfig {
     RandomWalk {
         speed: f32,
         idle_secs: Range<f32>,
+        walk_radius: f32,
     },
 }
