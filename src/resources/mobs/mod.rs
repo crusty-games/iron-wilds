@@ -23,8 +23,9 @@ impl Default for MobStore {
                 max_health: 100.0,
                 damage: None,
                 movement: MovementConfig::RandomWalk {
-                    speed: 20.0,
+                    speed: 0.75,
                     idle_secs: 1.0..5.0,
+                    walk_radius: 500.0,
                 },
                 assets: Some(AssetConfig {
                     test_path: "test/ghost.png".into(),
