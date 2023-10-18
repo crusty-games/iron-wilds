@@ -8,6 +8,7 @@ use crate::components::physics::Physics;
 use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::storage::StorageItem;
 use crate::components::ui::InventorySlot;
+use crate::events::inventory::ActiveSlotChangeEvent;
 use crate::events::items::{SpawnItemEvent, SpawnKind};
 use crate::resources::inputs::GameInputs;
 use crate::resources::inventory::Inventory;
@@ -96,44 +97,47 @@ pub fn drop_item(
 }
 
 macro_rules! choose_key_slot {
-    ($keyboard_input:ident, $inventory:ident, $key:ident, $index:expr) => {
+    ($keyboard_input:ident, $change_event:ident, $key:ident, $index:expr) => {
         if $keyboard_input.just_pressed(KeyCode::$key) {
-            $inventory.hotbar.active_slot = $index;
+            $change_event.send(ActiveSlotChangeEvent { slot_index: $index });
         }
     };
 }
 
 pub fn choose_active_slot_keyboard(
-    mut inventory: ResMut<Inventory>,
     keyboard_input: Res<Input<KeyCode>>,
+    mut change_event: EventWriter<ActiveSlotChangeEvent>,
 ) {
-    choose_key_slot!(keyboard_input, inventory, Key1, 0);
-    choose_key_slot!(keyboard_input, inventory, Key2, 1);
-    choose_key_slot!(keyboard_input, inventory, Key3, 2);
-    choose_key_slot!(keyboard_input, inventory, Key4, 3);
-    choose_key_slot!(keyboard_input, inventory, Key5, 4);
-    choose_key_slot!(keyboard_input, inventory, Key6, 5);
-    choose_key_slot!(keyboard_input, inventory, Key7, 6);
-    choose_key_slot!(keyboard_input, inventory, Key8, 7);
+    choose_key_slot!(keyboard_input, change_event, Key1, 0);
+    choose_key_slot!(keyboard_input, change_event, Key2, 1);
+    choose_key_slot!(keyboard_input, change_event, Key3, 2);
+    choose_key_slot!(keyboard_input, change_event, Key4, 3);
+    choose_key_slot!(keyboard_input, change_event, Key5, 4);
+    choose_key_slot!(keyboard_input, change_event, Key6, 5);
+    choose_key_slot!(keyboard_input, change_event, Key7, 6);
+    choose_key_slot!(keyboard_input, change_event, Key8, 7);
 }
 
 pub fn choose_active_slot_scroll(
-    mut inventory: ResMut<Inventory>,
+    inventory: Res<Inventory>,
+    mut change_event: EventWriter<ActiveSlotChangeEvent>,
     mut scroll_event: EventReader<MouseWheel>,
 ) {
     for ev in scroll_event.read() {
         if let MouseScrollUnit::Line = ev.unit {
-            inventory.hotbar.active_slot = ((inventory.hotbar.active_slot as i32) - (ev.y as i32))
-                .max(0)
-                .min((inventory.hotbar.capacity as i32) - 1)
-                as usize;
+            change_event.send(ActiveSlotChangeEvent {
+                slot_index: ((inventory.hotbar.active_slot as i32) - (ev.y as i32))
+                    .clamp(0, (inventory.hotbar.capacity as i32) - 1)
+                    as usize,
+            });
         }
     }
 }
 
 pub fn choose_active_slot_controller(
-    mut inventory: ResMut<Inventory>,
+    inventory: Res<Inventory>,
     mut gamepad_event: EventReader<GamepadEvent>,
+    mut change_event: EventWriter<ActiveSlotChangeEvent>,
 ) {
     for event in gamepad_event.read() {
         let mut change = 0;
@@ -148,21 +152,25 @@ pub fn choose_active_slot_controller(
         };
         if change != 0 {
             let range = inventory.hotbar.range();
-            inventory.hotbar.active_slot = (inventory.hotbar.active_slot as isize)
-                .add(change)
-                .clamp(range.start as isize, range.end as isize)
-                as usize;
+            change_event.send(ActiveSlotChangeEvent {
+                slot_index: (inventory.hotbar.active_slot as isize)
+                    .add(change)
+                    .clamp(range.start as isize, range.end as isize)
+                    as usize,
+            });
         }
     }
 }
 
 pub fn click_inventory_slot(
     slots_query: Query<(&InventorySlot, &Interaction)>,
-    mut inventory: ResMut<Inventory>,
+    mut change_event: EventWriter<ActiveSlotChangeEvent>,
 ) {
     for (slot, interaction) in slots_query.iter() {
         if matches!(interaction, Interaction::Pressed) {
-            inventory.hotbar.active_slot = slot.slot_index;
+            change_event.send(ActiveSlotChangeEvent {
+                slot_index: slot.slot_index,
+            });
         }
     }
 }

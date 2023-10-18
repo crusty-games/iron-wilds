@@ -1,7 +1,10 @@
 use crate::components::physics::Physics;
 use crate::components::player::{Player, PrimaryPlayer};
+use crate::events::inventory::ActiveSlotChangeEvent;
 use crate::resources::inputs::GameInputs;
+use crate::resources::inventory::Inventory;
 use crate::resources::physics::PhysicsTimer;
+use crate::resources::player::PlayerCombat;
 
 use bevy::prelude::*;
 
@@ -57,4 +60,8 @@ pub fn follow_player(
             camera.translation += translation;
         }
     }
+}
+
+pub fn tick_player_combat(mut player_combat: ResMut<PlayerCombat>, time: Res<Time>) {
+    player_combat.item_use_timer.tick(time.delta());
 }
