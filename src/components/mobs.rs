@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use super::physics::Physics;
+
 #[derive(Component)]
 pub struct Mob {
     pub mob_id: String,
@@ -11,14 +13,23 @@ pub struct Life {
     pub health: f32,
 }
 
-#[derive(Component)]
+#[derive(Component, Default)]
 pub struct RandomWalk {
-    pub timer: timer,
+    pub timer: Timer,
     pub target_position: Vec2,
     pub state: RandomWalkState,
 }
 
+#[derive(Default)]
 pub enum RandomWalkState {
+    #[default]
     Idling,
     Walking,
+}
+
+#[derive(Bundle)]
+pub struct MobBundle {
+    pub mob: Mob,
+    pub life: Life,
+    pub physics: Physics,
 }

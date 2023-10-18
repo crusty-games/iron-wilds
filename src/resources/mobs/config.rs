@@ -7,13 +7,25 @@ pub struct MobConfig {
     pub max_health: f32,
 
     pub damage: Option<DamageConfig>,
-    pub movement: Option<MovementConfig>,
+    pub movement: MovementConfig,
+
+    pub assets: Option<AssetConfig>,
+}
+
+pub struct AssetConfig {
+    pub test_path: String,
 }
 
 pub struct DamageConfig {
     pub effect: f32,
 }
 
+#[derive(Default)]
 pub enum MovementConfig {
-    RandomWalk { speed: f32, interval_ms: Range<f32> },
+    #[default]
+    None,
+    RandomWalk {
+        speed: f32,
+        idle_secs: Range<f32>,
+    },
 }
