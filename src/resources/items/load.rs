@@ -1,6 +1,6 @@
 use super::config::{
     AssetConfig, ConsumableConfig, DestructibleConfig, ItemConfig, ItemDropConfig, PlacableConfig,
-    WeaponConfig,
+    WeaponConfig, WeaponKind,
 };
 
 #[allow(clippy::vec_init_then_push)]
@@ -41,7 +41,13 @@ pub fn load_sample_items() -> Vec<ItemConfig> {
     items.push(ItemConfig {
         id: "sword".into(),
         name: "Sword".into(),
-        weapon: Some(WeaponConfig { base_damage: 20.0 }),
+        weapon: Some(WeaponConfig {
+            base_damage: 20.0,
+            kind: WeaponKind::Melee {
+                swing_radius: 100.0,
+                swing_duration_secs: 1.0,
+            },
+        }),
         assets: Some(AssetConfig {
             ground_item_path: "test/sword.png".into(),
         }),

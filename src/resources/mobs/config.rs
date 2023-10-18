@@ -1,5 +1,7 @@
 use std::ops::Range;
 
+use crate::resources::items::config::ItemDropConfig;
+
 #[derive(Default)]
 pub struct MobConfig {
     pub id: String,
@@ -9,6 +11,7 @@ pub struct MobConfig {
     pub damage: Option<DamageConfig>,
     pub movement: MovementConfig,
 
+    pub drops: Vec<ItemDropConfig>,
     pub assets: Option<AssetConfig>,
 }
 

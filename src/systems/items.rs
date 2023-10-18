@@ -75,18 +75,16 @@ pub fn spawn_item_event_handler(
 
 pub fn spawn_items(mut spawn_event: EventWriter<SpawnItemEvent>, item_store: Res<ItemStore>) {
     for (id, _) in item_store.items.iter() {
-        for _ in 0..20 {
-            spawn_event.send(SpawnItemEvent {
-                kind: SpawnKind::GroundLoot {
-                    item_id: id.clone(),
-                    stack_count: thread_rng().gen_range(1..2),
-                    position: Vec2 {
-                        x: (random::<f32>() - 0.5) * 800.0,
-                        y: (random::<f32>() - 0.5) * 800.0,
-                    },
+        spawn_event.send(SpawnItemEvent {
+            kind: SpawnKind::GroundLoot {
+                item_id: id.clone(),
+                stack_count: thread_rng().gen_range(1..2),
+                position: Vec2 {
+                    x: (random::<f32>() - 0.5) * 200.0,
+                    y: (random::<f32>() - 0.5) * 200.0,
                 },
-            })
-        }
+            },
+        })
     }
 }
 

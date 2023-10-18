@@ -15,12 +15,12 @@ use crate::{
 
 pub fn spawn_all_mobs(mut spawn_event: EventWriter<SpawnMob>, mob_store: Res<MobStore>) {
     for mob in mob_store.mobs.values() {
-        for _ in 0..10 {
+        for _ in 0..4 {
             spawn_event.send(SpawnMob {
                 mob_id: mob.id.to_owned(),
                 position: Vec2 {
-                    x: (random::<f32>() - 0.5) * 800.0,
-                    y: (random::<f32>() - 0.5) * 800.0,
+                    x: (random::<f32>() - 0.5) * 400.0,
+                    y: (random::<f32>() - 0.5) * 400.0,
                 },
             })
         }
