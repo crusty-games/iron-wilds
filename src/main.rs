@@ -1,8 +1,8 @@
-mod components;
-mod events;
-mod plugins;
-mod resources;
-mod systems;
+pub mod components;
+pub mod events;
+pub mod plugins;
+pub mod resources;
+pub mod systems;
 
 #[cfg(test)]
 mod tests;
