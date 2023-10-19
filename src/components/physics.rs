@@ -30,9 +30,9 @@ pub struct Gravitate {
 impl Default for Gravitate {
     fn default() -> Self {
         Self {
-            max_radius: 100.0,
-            min_radius: 20.0,
-            strength: 1.0,
+            max_radius: 1.25,
+            min_radius: 1.0,
+            strength: 0.025,
         }
     }
 }

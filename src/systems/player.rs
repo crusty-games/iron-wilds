@@ -11,17 +11,14 @@ pub enum PlayerSet {
 }
 
 pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let scale = 3.0;
+    let scale = 1.0 / 18.0;
     commands.spawn((
         PrimaryPlayer,
         Player {
-            movement_speed: 3.0,
-            item_pick_up_radius: 20.0,
+            movement_speed: 0.05,
+            item_pick_up_radius: 0.4,
         },
-        Physics {
-            velocity: Vec2 { x: 0.0, y: 10.0 },
-            ..default()
-        },
+        Physics::default(),
         SpriteBundle {
             texture: asset_server.load("test/player.png"),
             transform: Transform::from_scale(Vec3 {
