@@ -18,6 +18,7 @@ pub fn spawn_camera(mut commands: Commands) {
 
 pub fn place_unit_tile(mut commands: Commands) {
     commands.spawn((
+        Name::new("UnitTile"),
         ShapeBundle {
             path: GeometryBuilder::build_as(&Rectangle {
                 extents: Vec2 { x: 1.0, y: 1.0 },
