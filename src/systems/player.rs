@@ -13,6 +13,7 @@ pub enum PlayerSet {
 pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     let scale = 3.0;
     commands.spawn((
+        Name::new("PrimaryPlayer"),
         PrimaryPlayer,
         Player {
             movement_speed: 3.0,
