@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::components::items::GroundItem;
 use crate::components::player::{Player, PrimaryPlayer};
 use crate::components::{physics::Physics, storage::StorageItem};
-use crate::resources::inventory::{Inventory, INVENTORY_COLUMNS, INVENTORY_ROWS};
+use crate::resources::inventory::Inventory;
 use crate::resources::items::ItemStore;
 
 pub fn pick_up_ground_items(
@@ -27,7 +27,7 @@ pub fn pick_up_ground_items(
                 let transaction = inventory
                     .storage
                     .get_target_slots(&item_store, &storage_item);
-                if transaction.target_slots.len() > 0 {
+                if !transaction.target_slots.is_empty() {
                     inventory.storage.commit_add(&item_store, &transaction);
                     if transaction.stack_left == 0 {
                         commands.entity(item_entity).despawn();
@@ -38,41 +38,4 @@ pub fn pick_up_ground_items(
             }
         }
     }
-}
-
-pub fn log_inventory(inventory: Res<Inventory>) {
-    if !inventory.is_changed() {
-        return;
-    }
-    let pad = "        ";
-    let divider = ".";
-    let mut log = String::from("Inventory:\n");
-
-    for row in 0..INVENTORY_ROWS {
-        let mut row_text = String::new();
-        for column in 0..INVENTORY_COLUMNS {
-            let index = row * INVENTORY_ROWS + column;
-            let storage_item = inventory.storage.items.get(&index).unwrap();
-            let item_text = if let Some(StorageItem {
-                item_id,
-                stack_count,
-            }) = storage_item
-            {
-                format!("{}({})", item_id, stack_count)
-            } else {
-                pad.clone().to_string()
-            };
-            let item_text = &format!("{}{}", item_text, pad)[0..pad.len()];
-            let item_text = if row == 0 && column == inventory.hotbar.active_slot {
-                format!("[{}]", item_text)
-            } else {
-                format!(" {} ", item_text)
-            };
-            row_text = format!("{}{}{}", row_text, divider, item_text);
-        }
-        log = format!("{}{}{}\n", log, row_text, divider);
-    }
-
-    let _ = clearscreen::clear();
-    println!("{}", log);
 }

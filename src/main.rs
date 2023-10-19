@@ -15,6 +15,7 @@ use plugins::player::IronWildsPlayerPlugin;
 use plugins::setup::IronWildsSetupPlugin;
 
 use bevy::prelude::*;
+use plugins::ui::IronWildsUiPlugin;
 
 fn main() {
     App::new()
@@ -24,5 +25,6 @@ fn main() {
         .add_plugins(IronWildsPhysicsPlugin)
         .add_plugins(IronWildsPlayerPlugin)
         .add_plugins(IronWildsInputsPlugin)
+        .add_plugins(IronWildsUiPlugin)
         .run();
 }
