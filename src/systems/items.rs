@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::{prelude::*, shapes::Circle};
 use rand::{random, thread_rng, Rng};
 
 use crate::components::items::{GroundItem, GroundItemBundle};
@@ -14,7 +13,7 @@ pub fn spawn_item_event_handler(
     item_store: Res<ItemStore>,
     asset_server: Res<AssetServer>,
 ) {
-    for event in spawn_event.iter() {
+    for event in spawn_event.read() {
         match event.kind.clone() {
             SpawnKind::GroundLoot {
                 item_id,
@@ -55,18 +54,6 @@ pub fn spawn_item_event_handler(
                         }),
                         ..default()
                     });
-                } else {
-                    entity_commands.insert((
-                        ShapeBundle {
-                            path: GeometryBuilder::build_as(&Circle {
-                                radius: 5.0,
-                                ..default()
-                            }),
-                            transform,
-                            ..default()
-                        },
-                        Fill::color(Color::RED),
-                    ));
                 }
             }
         }

@@ -40,7 +40,7 @@ pub fn movement_controller(
     mut gamepad_event: EventReader<GamepadEvent>,
     mut game_inputs: ResMut<GameInputs>,
 ) {
-    for event in gamepad_event.iter() {
+    for event in gamepad_event.read() {
         if let GamepadEvent::Axis(axis_event) = event {
             match axis_event.axis_type {
                 GamepadAxisType::LeftStickX => game_inputs.movement.controller.x = axis_event.value,
@@ -61,7 +61,7 @@ pub fn drop_item(
     let mut drop_item = keyboard_input.just_pressed(KeyCode::V);
 
     if !drop_item {
-        for event in gamepad_event.iter() {
+        for event in gamepad_event.read() {
             if let GamepadEvent::Button(button_event) = event {
                 if button_event.value == 1.0
                     && matches!(button_event.button_type, GamepadButtonType::West)
@@ -121,7 +121,7 @@ pub fn choose_active_slot_scroll(
     mut inventory: ResMut<Inventory>,
     mut scroll_event: EventReader<MouseWheel>,
 ) {
-    for ev in scroll_event.iter() {
+    for ev in scroll_event.read() {
         if let MouseScrollUnit::Line = ev.unit {
             inventory.hotbar.active_slot = ((inventory.hotbar.active_slot as i32) - (ev.y as i32))
                 .max(0)
@@ -135,7 +135,7 @@ pub fn choose_active_slot_controller(
     mut inventory: ResMut<Inventory>,
     mut gamepad_event: EventReader<GamepadEvent>,
 ) {
-    for event in gamepad_event.iter() {
+    for event in gamepad_event.read() {
         let mut change = 0;
         if let GamepadEvent::Button(button_event) = event {
             if button_event.value == 1.0 {
