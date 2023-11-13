@@ -40,8 +40,19 @@ pub struct ConsumableConfig {
 }
 
 pub struct ToolConfig;
+#[derive(Default)]
 pub struct WeaponConfig {
     pub base_damage: f32,
+    pub kind: WeaponKind,
+    pub use_interval_secs: f32,
+}
+#[derive(Default)]
+pub enum WeaponKind {
+    #[default]
+    Custom,
+    Melee {
+        swing_radius: f32,
+    },
 }
 pub struct PlacableConfig {}
 pub struct ItemDropConfig {
