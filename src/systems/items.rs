@@ -13,7 +13,7 @@ pub fn spawn_item_event_handler(
     item_store: Res<ItemStore>,
     asset_server: Res<AssetServer>,
 ) {
-    for event in spawn_event.iter() {
+    for event in spawn_event.read() {
         match event.kind.clone() {
             SpawnKind::GroundLoot {
                 item_id,

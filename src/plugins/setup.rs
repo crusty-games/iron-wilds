@@ -1,8 +1,7 @@
 use bevy::{log::LogPlugin, prelude::*};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
-use bevy_prototype_lyon::prelude::ShapePlugin;
 
-use crate::systems::setup::{place_unit_tile, say_hello, spawn_camera};
+use crate::systems::setup::{say_hello, spawn_camera};
 
 pub struct IronWildsSetupPlugin;
 impl Plugin for IronWildsSetupPlugin {
@@ -16,9 +15,8 @@ impl Plugin for IronWildsSetupPlugin {
                     })
                     .set(ImagePlugin::default_nearest()),
             )
-            .add_plugins(ShapePlugin)
             .add_plugins(WorldInspectorPlugin::new())
-            .add_systems(Startup, (say_hello, place_unit_tile))
+            .add_systems(Startup, say_hello)
             .add_systems(Startup, spawn_camera);
     }
 }
