@@ -7,6 +7,7 @@ mod systems;
 #[cfg(test)]
 mod tests;
 
+use plugins::debugging::IronWildsDebuggingPlugin;
 use plugins::inputs::IronWildsInputsPlugin;
 use plugins::inventory::IronWildsInventoryPlugin;
 use plugins::items::IronWildsItemsPlugin;
@@ -26,5 +27,6 @@ fn main() {
         .add_plugins(IronWildsPlayerPlugin)
         .add_plugins(IronWildsInputsPlugin)
         .add_plugins(IronWildsUiPlugin)
+        .add_plugins(IronWildsDebuggingPlugin)
         .run();
 }
