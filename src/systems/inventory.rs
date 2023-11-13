@@ -45,7 +45,7 @@ pub fn choose_active_slot(
     mut inventory: ResMut<Inventory>,
     mut change_event: EventReader<ActiveSlotChangeEvent>,
 ) {
-    for ActiveSlotChangeEvent { slot_index } in change_event.iter() {
+    for ActiveSlotChangeEvent { slot_index } in change_event.read() {
         inventory.hotbar.active_slot = *slot_index;
     }
 }
