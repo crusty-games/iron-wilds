@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::{prelude::*, shapes::Circle};
 use rand::{random, thread_rng, Rng};
 
 use crate::components::items::{GroundItem, GroundItemBundle};
@@ -38,14 +37,14 @@ pub fn spawn_item_event_handler(
                                 y: random::<f32>() - 0.5,
                             }
                             .normalize()
-                                * 10.0,
+                                * 0.25,
                             friction: 0.8,
                         },
                     },
                 ));
                 let transform = Transform::from_xyz(position.x, position.y, 1.0);
                 if let Some(AssetConfig { ground_item_path }) = &item.assets {
-                    let scale = 2.0;
+                    let scale = 1.0 / 32.0;
                     entity_commands.insert(SpriteBundle {
                         texture: asset_server.load(ground_item_path),
                         transform: transform.with_scale(Vec3 {
@@ -55,18 +54,6 @@ pub fn spawn_item_event_handler(
                         }),
                         ..default()
                     });
-                } else {
-                    entity_commands.insert((
-                        ShapeBundle {
-                            path: GeometryBuilder::build_as(&Circle {
-                                radius: 5.0,
-                                ..default()
-                            }),
-                            transform,
-                            ..default()
-                        },
-                        Fill::color(Color::RED),
-                    ));
                 }
             }
         }
@@ -75,14 +62,14 @@ pub fn spawn_item_event_handler(
 
 pub fn spawn_items(mut spawn_event: EventWriter<SpawnItemEvent>, item_store: Res<ItemStore>) {
     for (id, _) in item_store.items.iter() {
-        for _ in 0..20 {
+        for _ in 0..2 {
             spawn_event.send(SpawnItemEvent {
                 kind: SpawnKind::GroundLoot {
                     item_id: id.clone(),
-                    stack_count: thread_rng().gen_range(1..2),
+                    stack_count: thread_rng().gen_range(1..4),
                     position: Vec2 {
-                        x: (random::<f32>() - 0.5) * 800.0,
-                        y: (random::<f32>() - 0.5) * 800.0,
+                        x: (random::<f32>() - 0.5) * 10.0,
+                        y: (random::<f32>() - 0.5) * 10.0,
                     },
                 },
             })
